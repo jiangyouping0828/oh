@@ -1,0 +1,1478 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="glass_bookstore_lounge">
+  
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true" />
+
+  
+  <option timestep="0.005" gravity="0 0 -9.81" iterations="50" solver="Newton" tolerance="1e-10">
+    <flag contact="enable" gravity="enable" />
+  </option>
+
+  
+  <default>
+    <geom conaffinity="1" condim="3" friction="1 0.5 0.005" solimp="0.9 0.95 0.001" solref="0.02 1" />
+    <joint damping="0.5" armature="0.01" />
+  </default>
+
+  
+  <visual>
+    <map force="0.1" zfar="100" />
+    <rgba haze="0.05 0.08 0.12 1" />
+    <quality shadowsize="4096" />
+    <global offwidth="1920" offheight="1080" />
+  </visual>
+
+  
+  <asset>
+    
+    <texture name="wood_floor" type="2d" builtin="checker" rgb1="0.6 0.5 0.4" rgb2="0.55 0.45 0.35" width="512" height="512" />
+    <material name="wood_floor_mat" texture="wood_floor" texrepeat="15 15" specular="0.4" shininess="0.4" reflectance="0.15" />
+
+    
+    <material name="glass_clear" rgba="0.85 0.92 0.97 0.12" specular="1" shininess="1" reflectance="0.8" />
+    <material name="glass_tinted" rgba="0.75 0.85 0.9 0.2" specular="1" shininess="1" reflectance="0.7" />
+
+    
+    <material name="metal_dark" rgba="0.2 0.2 0.22 1" specular="0.9" shininess="0.8" reflectance="0.4" />
+    <material name="metal_chrome" rgba="0.85 0.85 0.87 1" specular="1" shininess="0.9" reflectance="0.7" />
+
+    
+    <material name="wood_dark" rgba="0.25 0.18 0.13 1" specular="0.2" shininess="0.2" reflectance="0" />
+    <material name="wood_light" rgba="0.75 0.65 0.55 1" specular="0.3" shininess="0.3" reflectance="0.05" />
+    <material name="wood_shelf" rgba="0.5 0.4 0.3 1" specular="0.25" shininess="0.25" reflectance="0.02" />
+    <material name="wood_beige" rgba="0.92 0.88 0.8 1" specular="0.25" shininess="0.25" reflectance="0.02" />
+
+    
+    <material name="sofa_beige" rgba="0.92 0.88 0.8 1" specular="0.1" shininess="0.1" />
+    <material name="sofa_grey" rgba="0.65 0.65 0.7 1" specular="0.1" shininess="0.1" />
+    <material name="sofa_blue" rgba="0.4 0.5 0.65 1" specular="0.1" shininess="0.1" />
+    <material name="sofa_green" rgba="0.5 0.65 0.55 1" specular="0.1" shininess="0.1" />
+    <material name="cushion_white" rgba="0.98 0.97 0.95 1" specular="0.15" shininess="0.1" />
+
+    
+    <texture name="grass" type="2d" builtin="checker" rgb1="0.3 0.55 0.3" rgb2="0.28 0.5 0.28" width="512" height="512" />
+    <material name="grass_mat" texture="grass" texrepeat="50 50" specular="0.1" shininess="0.05" reflectance="0" />
+
+    
+    <texture name="skybox" type="skybox" builtin="gradient" rgb1="0.65 0.8 0.95" rgb2="0.35 0.55 0.75" width="512" height="512" />
+
+    
+    <material name="book_red" rgba="0.8 0.2 0.2 1" specular="0.3" shininess="0.2" />
+    <material name="book_blue" rgba="0.2 0.3 0.7 1" specular="0.3" shininess="0.2" />
+    <material name="book_green" rgba="0.3 0.6 0.3 1" specular="0.3" shininess="0.2" />
+    <material name="book_brown" rgba="0.5 0.35 0.25 1" specular="0.3" shininess="0.2" />
+    <material name="book_black" rgba="0.15 0.15 0.15 1" specular="0.3" shininess="0.2" />
+    
+    
+    <material name="ceramic_blue" rgba="0.2 0.4 0.6 1" specular="0.5" shininess="0.4" />
+    <material name="ceramic_red" rgba="0.8 0.3 0.3 1" specular="0.5" shininess="0.4" />
+    <material name="ceramic_white" rgba="0.9 0.9 0.9 1" specular="0.6" shininess="0.5" />
+    <material name="metal_gold" rgba="0.9 0.8 0.3 1" specular="0.9" shininess="0.8" />
+    <material name="metal_silver" rgba="0.8 0.8 0.8 1" specular="0.9" shininess="0.8" />
+    <material name="plant_green" rgba="0.3 0.7 0.3 1" specular="0.2" shininess="0.1" />
+  </asset>
+
+  
+  <worldbody>
+    
+    <light directional="true" diffuse="1.3 1.3 1.2" specular="0.7 0.7 0.6" pos="40 30 50" dir="-1 -0.8 -1.5" castshadow="true" />
+
+    
+    <light directional="true" diffuse="0.6 0.65 0.7" specular="0.3 0.3 0.3" pos="-30 -20 40" dir="0.8 0.6 -1" castshadow="false" />
+
+    
+    <geom name="ground" type="plane" size="60 60 0.1" material="grass_mat" condim="3" />
+
+    
+    <body name="bookstore_building" pos="0 0 0">
+
+      
+      <geom name="floor" type="box" size="10 8 0.1" pos="0 0 0.1" material="wood_floor_mat" />
+
+      
+      <geom name="back_wall" type="box" size="10 0.2 3.5" pos="0 -8 3.5" material="wood_light" />
+    
+<geom name="left_wall_bottom" type="box" size="0.15 8 1" pos="-10 0 1" material="wood_light" />
+      <geom name="left_glass_wall" type="box" size="0.05 8 3.5" pos="-10 0 3.0" material="glass_clear" />
+
+      
+      <geom name="right_wall_bottom" type="box" size="0.15 8 1" pos="10 0 1" material="wood_light" />
+      <geom name="right_glass_wall" type="box" size="0.05 8 3.5" pos="10 0 3.0" material="glass_clear" />
+
+      
+      <geom name="front_glass_left" type="box" size="4 0.05 3.5" pos="-6 8 3.325" material="glass_clear" />
+      <geom name="front_glass_right" type="box" size="4 0.05 3.5" pos="6 8 3.325" material="glass_clear" />
+      <geom name="front_glass_center" type="box" size="4 0.05 3.5" pos="0 8 3.325" material="glass_clear" />
+
+      
+    <geom name="door_frame_left" type="box" size="0.1 0.1 3.5" pos="-2.5 8 3.325" material="metal_dark" />
+    <geom name="door_frame_right" type="box" size="0.1 0.1 3.5" pos="2.5 8 3.325" material="metal_dark" />
+
+
+
+    
+      <geom name="ceiling" type="box" size="10.2 8.2 0.15" pos="0 0 6.65" material="wood_light" />
+
+      
+      <geom name="skylight_1" type="box" size="2 2 0.05" pos="-4 -3 6.65" material="glass_clear" />
+      <geom name="skylight_2" type="box" size="2 2 0.05" pos="4 -3 6.65" material="glass_clear" />
+      <geom name="skylight_3" type="box" size="2 2 0.05" pos="0 3 6.65" material="glass_clear" />
+
+      
+      <light mode="fixed" directional="false" diffuse="1.1 1.05 0.95" specular="0.5 0.5 0.4" pos="-4 -3 6.3" dir="0 0 -1" castshadow="false" cutoff="60" />
+      <light mode="fixed" directional="false" diffuse="1.1 1.05 0.95" specular="0.5 0.5 0.4" pos="4 -3 6.3" dir="0 0 -1" castshadow="false" cutoff="60" />
+
+      
+      <!-- 新增吊灯 -->
+      <body name="chandelier_1" pos="-4 3 6.65">
+        <geom name="ch1_chain" type="cylinder" size="0.01 0.5" pos="0 0 -0.5" material="metal_dark" />
+        <geom name="ch1_frame" type="cylinder" size="0.1 0.02" pos="0 0 -1.0" material="metal_dark" />
+        <geom name="ch1_shade" type="cylinder" size="0.15 0.08" pos="0 0 -1.1" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.4 0.3" pos="-4 3 5.5" dir="0 0 -1" castshadow="false" cutoff="45" />
+      </body>
+      
+      <body name="chandelier_2" pos="4 3 6.65">
+        <geom name="ch2_chain" type="cylinder" size="0.01 0.5" pos="0 0 -0.5" material="metal_dark" />
+        <geom name="ch2_frame" type="cylinder" size="0.1 0.02" pos="0 0 -1.0" material="metal_dark" />
+        <geom name="ch2_shade" type="cylinder" size="0.15 0.08" pos="0 0 -1.1" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.4 0.3" pos="4 3 5.5" dir="0 0 -1" castshadow="false" cutoff="45" />
+      </body>
+      
+      <body name="chandelier_3" pos="0 -3 6.65">
+        <geom name="ch3_chain" type="cylinder" size="0.01 0.5" pos="0 0 -0.5" material="metal_dark" />
+        <geom name="ch3_frame" type="cylinder" size="0.1 0.02" pos="0 0 -1.0" material="metal_dark" />
+        <geom name="ch3_shade" type="cylinder" size="0.15 0.08" pos="0 0 -1.1" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.4 0.3" pos="0 -3 5.5" dir="0 0 -1" castshadow="false" cutoff="45" />
+      </body>
+      
+      <body name="chandelier_4" pos="0 0 6.65">
+        <geom name="ch4_chain" type="cylinder" size="0.01 0.6" pos="0 0 -0.6" material="metal_dark" />
+        <geom name="ch4_frame" type="cylinder" size="0.12 0.02" pos="0 0 -1.2" material="metal_dark" />
+        <geom name="ch4_shade" type="cylinder" size="0.18 0.1" pos="0 0 -1.3" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="1.0 0.95 0.85" specular="0.5 0.5 0.4" pos="0 0 5.3" dir="0 0 -1" castshadow="false" cutoff="50" />
+      </body>
+      
+      <body name="chandelier_5" pos="-5 0 6.65">
+        <geom name="ch5_chain" type="cylinder" size="0.01 0.5" pos="0 0 -0.5" material="metal_dark" />
+        <geom name="ch5_frame" type="cylinder" size="0.1 0.02" pos="0 0 -1.0" material="metal_dark" />
+        <geom name="ch5_shade" type="cylinder" size="0.15 0.08" pos="0 0 -1.1" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.4 0.3" pos="-5 0 5.5" dir="0 0 -1" castshadow="false" cutoff="45" />
+      </body>
+      
+      <body name="chandelier_6" pos="5 0 6.65">
+        <geom name="ch6_chain" type="cylinder" size="0.01 0.5" pos="0 0 -0.5" material="metal_dark" />
+        <geom name="ch6_frame" type="cylinder" size="0.1 0.02" pos="0 0 -1.0" material="metal_dark" />
+        <geom name="ch6_shade" type="cylinder" size="0.15 0.08" pos="0 0 -1.1" rgba="0.95 0.9 0.85 0.7" />
+        <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.4 0.3" pos="5 0 5.5" dir="0 0 -1" castshadow="false" cutoff="45" />
+      </body>
+
+    </body>
+
+    <!-- 靠墙书柜组 -->
+    <body name="bookshelf_3" pos="0 -6.5 0">
+      <!-- 书架主体 -->
+      <geom name="shelf3_back" type="box" size="3 0.1 3.25" pos="0 -0.4 3.25" material="wood_shelf" />
+      <geom name="shelf3_left" type="box" size="0.05 0.4 3.25" pos="-3 0 3.25" material="wood_shelf" />
+      <geom name="shelf3_right" type="box" size="0.05 0.4 3.25" pos="3 0 3.25" material="wood_shelf" />
+      <geom name="shelf3_top" type="box" size="3 0.4 0.05" pos="0 0 6.5" material="wood_shelf" />
+
+      <!-- 层板 -->
+      <geom name="shelf3_layer1" type="box" size="2.95 0.35 0.03" pos="0 0 1.0" material="wood_shelf" />
+      <geom name="shelf3_layer2" type="box" size="2.95 0.35 0.03" pos="0 0 2.0" material="wood_shelf" />
+      <geom name="shelf3_layer3" type="box" size="2.95 0.35 0.03" pos="0 0 3.0" material="wood_shelf" />
+      <geom name="shelf3_layer4" type="box" size="2.95 0.35 0.03" pos="0 0 4.0" material="wood_shelf" />
+      <geom name="shelf3_layer5" type="box" size="2.95 0.35 0.03" pos="0 0 5.0" material="wood_shelf" />
+      <geom name="shelf3_layer6" type="box" size="2.95 0.35 0.03" pos="0 0 6.0" material="wood_shelf" />
+
+
+
+
+    </body>
+
+<body name="study_row_1" pos="-5 2 0">
+      
+      <geom name="long_table_1_top" type="box" size="2.4 0.7 0.03" pos="0 0 0.75" material="wood_dark" />
+      <geom name="long_table_1_leg1" type="box" size="0.06 0.06 0.375" pos="-2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_1_leg2" type="box" size="0.06 0.06 0.375" pos="-2.2 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_1_leg3" type="box" size="0.06 0.06 0.375" pos="0 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_1_leg4" type="box" size="0.06 0.06 0.375" pos="0 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_1_leg5" type="box" size="0.06 0.06 0.375" pos="2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_1_leg6" type="box" size="0.06 0.06 0.375" pos="2.2 0.6 0.375" material="metal_dark" />
+
+      
+      <geom name="divider_1_1" type="box" size="0.02 0.35 0.4" pos="-1.6 0 1.15" material="wood_light" />
+      <geom name="divider_1_2" type="box" size="0.02 0.35 0.4" pos="-0.8 0 1.15" material="wood_light" />
+      <geom name="divider_1_3" type="box" size="0.02 0.35 0.4" pos="0 0 1.15" material="wood_light" />
+      <geom name="divider_1_4" type="box" size="0.02 0.35 0.4" pos="0.8 0 1.15" material="wood_light" />
+      <geom name="divider_1_5" type="box" size="0.02 0.35 0.4" pos="1.6 0 1.15" material="wood_light" />
+
+      
+      <geom name="book_s1_1" type="box" size="0.12 0.18 0.025" pos="-2.0 0.15 0.805" material="book_blue" />
+      <geom name="book_s1_2" type="box" size="0.14 0.2 0.03" pos="-2.0 0.15 0.855" material="book_green" />
+
+      
+      <geom name="laptop_1_2_base" type="box" size="0.15 0.22 0.015" pos="-1.2 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_1_2_screen" type="box" size="0.15 0.01 0.2" pos="-1.2 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s1_4_1" type="box" size="0.13 0.19 0.028" pos="0.4 0.2 0.803" material="book_brown" />
+
+      
+      <geom name="laptop_1_5_base" type="box" size="0.15 0.22 0.015" pos="1.2 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_1_5_screen" type="box" size="0.15 0.01 0.2" pos="1.2 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+      <geom name="book_s1_6_1" type="box" size="0.11 0.16 0.024" pos="2.0 -0.1 0.799" material="book_red" />
+      <geom name="book_s1_6_2" type="box" size="0.12 0.17 0.026" pos="2.0 0.15 0.799" material="book_black" />
+    </body>
+
+    
+    <body name="chair_1_1" pos="-7 3 0" euler="0 0 180">
+      <geom name="c1_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_1_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_1_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_1_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_1_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_1_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_1" pos="-7 2 0.75">
+      <geom name="l1_1_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_1_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_1_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-7 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_1_2" pos="-6.2 3 0" euler="0 0 180">
+      <geom name="c1_2_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_2_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_2_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_2_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_2_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_2_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_2" pos="-6.2 2 0.75">
+      <geom name="l1_2_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_2_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_2_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-6.2 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_1_3" pos="-5.4 3 0" euler="0 0 180">
+      <geom name="c1_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_3_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_3_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_3_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_3_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_3_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_3" pos="-5.4 2 0.75">
+      <geom name="l1_3_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_3_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_3_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-5.4 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_1_4" pos="-4.6 3 0" euler="0 0 180">
+      <geom name="c1_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_4_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_4_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_4_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_4_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_4_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_4" pos="-4.6 2 0.75">
+      <geom name="l1_4_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_4_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_4_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-4.6 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_1_5" pos="-3.8 3 0" euler="0 0 180">
+      <geom name="c1_5_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_5_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_5_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_5_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_5_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_5_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_5" pos="-3.8 2 0.75">
+      <geom name="l1_5_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_5_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_5_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-3.8 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_1_6" pos="-3.0 3 0" euler="0 0 180">
+      <geom name="c1_6_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c1_6_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c1_6_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_6_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c1_6_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c1_6_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_1_6" pos="-3.0 2 0.75">
+      <geom name="l1_6_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l1_6_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l1_6_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-3.0 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body><body name="study_row_2" pos="5 2 0">
+      
+      <geom name="long_table_2_top" type="box" size="2.4 0.7 0.03" pos="0 0 0.75" material="wood_dark" />
+      <geom name="long_table_2_leg1" type="box" size="0.06 0.06 0.375" pos="-2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_2_leg2" type="box" size="0.06 0.06 0.375" pos="-2.2 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_2_leg3" type="box" size="0.06 0.06 0.375" pos="0 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_2_leg4" type="box" size="0.06 0.06 0.375" pos="0 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_2_leg5" type="box" size="0.06 0.06 0.375" pos="2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_2_leg6" type="box" size="0.06 0.06 0.375" pos="2.2 0.6 0.375" material="metal_dark" />
+
+      
+      <geom name="divider_2_1" type="box" size="0.02 0.35 0.4" pos="-1.6 0 1.15" material="wood_light" />
+      <geom name="divider_2_2" type="box" size="0.02 0.35 0.4" pos="-0.8 0 1.15" material="wood_light" />
+      <geom name="divider_2_3" type="box" size="0.02 0.35 0.4" pos="0 0 1.15" material="wood_light" />
+      <geom name="divider_2_4" type="box" size="0.02 0.35 0.4" pos="0.8 0 1.15" material="wood_light" />
+      <geom name="divider_2_5" type="box" size="0.02 0.35 0.4" pos="1.6 0 1.15" material="wood_light" />
+
+      
+      <geom name="laptop_2_1_base" type="box" size="0.15 0.22 0.015" pos="-2.0 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_2_1_screen" type="box" size="0.15 0.01 0.2" pos="-2.0 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s2_3_1" type="box" size="0.14 0.19 0.027" pos="-0.4 0.15 0.801" material="book_green" />
+      <geom name="book_s2_3_2" type="box" size="0.12 0.17 0.025" pos="-0.4 -0.1 0.801" material="book_blue" />
+
+      
+      <geom name="laptop_2_4_base" type="box" size="0.15 0.22 0.015" pos="0.4 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_2_4_screen" type="box" size="0.15 0.01 0.2" pos="0.4 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s2_6_1" type="box" size="0.13 0.18 0.026" pos="2.0 0.2 0.801" material="book_brown" />
+    </body>
+
+    
+    <body name="chair_2_1" pos="3 3 0" euler="0 0 180">
+      <geom name="c2_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_1_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_1_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_1_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_1_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_1_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_1" pos="3 2 0.75">
+      <geom name="l2_1_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_1_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_1_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="3 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_2_2" pos="3.8 3 0" euler="0 0 180">
+      <geom name="c2_2_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_2_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_2_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_2_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_2_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_2_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_2" pos="3.8 2 0.75">
+      <geom name="l2_2_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_2_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_2_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="3.8 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_2_3" pos="4.6 3 0" euler="0 0 180">
+      <geom name="c2_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_3_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_3_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_3_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_3_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_3_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_3" pos="4.6 2 0.75">
+      <geom name="l2_3_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_3_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_3_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="4.6 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_2_4" pos="5.4 3 0" euler="0 0 180">
+      <geom name="c2_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_4_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_4_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_4_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_4_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_4_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_4" pos="5.4 2 0.75">
+      <geom name="l2_4_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_4_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_4_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="5.4 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_2_5" pos="6.2 3 0" euler="0 0 180">
+      <geom name="c2_5_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_5_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_5_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_5_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_5_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_5_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_5" pos="6.2 2 0.75">
+      <geom name="l2_5_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_5_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_5_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="6.2 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_2_6" pos="7 3 0" euler="0 0 180">
+      <geom name="c2_6_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c2_6_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c2_6_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_6_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c2_6_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c2_6_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_2_6" pos="7 2 0.75">
+      <geom name="l2_6_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l2_6_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l2_6_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="7 1.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+
+
+
+
+
+
+
+
+    
+    <body name="pendant_lamp_1" pos="-3 2 6.65">
+      <geom name="plamp1_cord" type="cylinder" size="0.01 0.8" pos="0 0 -0.8" material="metal_dark" />
+      <geom name="plamp1_shade" type="sphere" size="0.25" pos="0 0 -1.6" rgba="0.95 0.92 0.85 0.6" />
+      <light mode="fixed" directional="false" diffuse="1 0.9 0.75" specular="0.4 0.35 0.25" pos="-3 2 5.05" dir="0 0 -1" castshadow="false" cutoff="50" />
+    </body>
+
+    
+    <body name="pendant_lamp_2" pos="3 2 6.65">
+      <geom name="plamp2_cord" type="cylinder" size="0.01 0.8" pos="0 0 -0.8" material="metal_dark" />
+      <geom name="plamp2_shade" type="sphere" size="0.25" pos="0 0 -1.6" rgba="0.95 0.92 0.85 0.6" />
+      <light mode="fixed" directional="false" diffuse="1 0.9 0.75" specular="0.4 0.35 0.25" pos="3 2 5.05" dir="0 0 -1" castshadow="false" cutoff="50" />
+    </body>
+
+    
+    <!-- 第一套沙发组合 - 书架左侧前方 -->
+    <body name="sofa_set_1" pos="-4 -5.5 0">
+        <!-- 左侧沙发 -->
+        <body name="sofa_1_1" pos="-1 0 0" euler="0 0 90">
+            <geom name="s1_1_frame" type="box" size="0.5 1.0 0.6" pos="0 0 0.3" material="sofa_beige" />
+            <geom name="s1_1_cushion1" type="box" size="0.45 0.95 0.05" pos="0 0 0.45" material="cushion_white" />
+            <geom name="s1_1_cushion2" type="box" size="0.45 0.05 0.45" pos="0 0.475 0.65" material="cushion_white" />
+        </body>
+        
+        <!-- 右侧沙发 -->
+        <body name="sofa_1_2" pos="1 0 0" euler="0 0 -90">
+            <geom name="s1_2_frame" type="box" size="0.5 1.0 0.6" pos="0 0 0.3" material="sofa_grey" />
+            <geom name="s1_2_cushion1" type="box" size="0.45 0.95 0.05" pos="0 0 0.45" material="cushion_white" />
+            <geom name="s1_2_cushion2" type="box" size="0.45 0.05 0.45" pos="0 -0.475 0.65" material="cushion_white" />
+        </body>
+        
+        <!-- 圆桌 -->
+        <body name="round_table_1" pos="0 0 0">
+            <geom name="rt1_top" type="cylinder" size="0.4 0.03" pos="0 0 0.75" material="wood_dark" />
+            <geom name="rt1_leg" type="cylinder" size="0.05 0.375" pos="0 0 0.375" material="metal_dark" />
+        </body>
+        
+        <!-- 落地灯 -->
+        <body name="floor_lamp_1" pos="0 0.9 0">
+            <geom name="fl1_base" type="cylinder" size="0.2 0.05" pos="0 0 0.025" material="metal_dark" />
+            <geom name="fl1_pole" type="cylinder" size="0.03 1.0" pos="0 0 0.55" material="metal_dark" />
+            <geom name="fl1_shade" type="cylinder" size="0.35 0.15" pos="0 0 1.7" quat="0.707 0 0 -0.707" rgba="0.95 0.9 0.85 0.7" />
+            <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.35 0.25" pos="-4 -4.6 1.8" dir="0 -1 0" castshadow="false" cutoff="60" />
+        </body>
+        
+        <!-- 小圆桌 -->
+        <body name="side_table_1" pos="-1.5 1.0 0">
+            <geom name="st1_top" type="cylinder" size="0.25 0.02" pos="0 0 0.5" material="wood_light" />
+            <geom name="st1_leg" type="cylinder" size="0.03 0.25" pos="0 0 0.25" material="metal_dark" />
+        </body>
+    </body>
+    
+    <!-- 第二套沙发组合 - 书架右侧前方 -->
+    <body name="sofa_set_2" pos="4 -5.5 0">
+        <!-- 左侧沙发 -->
+        <body name="sofa_2_1" pos="-1 0 0" euler="0 0 90">
+            <geom name="s2_1_frame" type="box" size="0.5 1.0 0.6" pos="0 0 0.3" material="sofa_blue" />
+            <geom name="s2_1_cushion1" type="box" size="0.45 0.95 0.05" pos="0 0 0.45" material="cushion_white" />
+            <geom name="s2_1_cushion2" type="box" size="0.45 0.05 0.45" pos="0 0.475 0.65" material="cushion_white" />
+        </body>
+        
+        <!-- 右侧沙发 -->
+        <body name="sofa_2_2" pos="1 0 0" euler="0 0 -90">
+            <geom name="s2_2_frame" type="box" size="0.5 1.0 0.6" pos="0 0 0.3" material="sofa_green" />
+            <geom name="s2_2_cushion1" type="box" size="0.45 0.95 0.05" pos="0 0 0.45" material="cushion_white" />
+            <geom name="s2_2_cushion2" type="box" size="0.45 0.05 0.45" pos="0 -0.475 0.65" material="cushion_white" />
+        </body>
+        
+        <!-- 圆桌 -->
+        <body name="round_table_2" pos="0 0 0">
+            <geom name="rt2_top" type="cylinder" size="0.4 0.03" pos="0 0 0.75" material="wood_dark" />
+            <geom name="rt2_leg" type="cylinder" size="0.05 0.375" pos="0 0 0.375" material="metal_dark" />
+        </body>
+        
+        <!-- 落地灯 -->
+        <body name="floor_lamp_2" pos="0 0.9 0">
+            <geom name="fl2_base" type="cylinder" size="0.2 0.05" pos="0 0 0.025" material="metal_dark" />
+            <geom name="fl2_pole" type="cylinder" size="0.03 1.0" pos="0 0 0.55" material="metal_dark" />
+            <geom name="fl2_shade" type="cylinder" size="0.35 0.15" pos="0 0 1.7" quat="0.707 0 0 -0.707" rgba="0.95 0.9 0.85 0.7" />
+            <light mode="fixed" directional="false" diffuse="0.9 0.85 0.75" specular="0.4 0.35 0.25" pos="4 -4.6 1.8" dir="0 -1 0" castshadow="false" cutoff="60" />
+        </body>
+        
+        <!-- 小圆桌 -->
+        <body name="side_table_2" pos="1.5 1.0 0">
+            <geom name="st2_top" type="cylinder" size="0.25 0.02" pos="0 0 0.5" material="wood_light" />
+            <geom name="st2_leg" type="cylinder" size="0.03 0.25" pos="0 0 0.25" material="metal_dark" />
+        </body>
+    </body>
+    
+    <camera name="exterior_view" pos="15 15 8" xyaxes="-0.7 0.7 0 -0.35 -0.35 0.87" mode="fixed" /><body name="study_row_3" pos="-5 5 0">
+      
+      <geom name="long_table_3_top" type="box" size="2.4 0.7 0.03" pos="0 0 0.75" material="wood_dark" />
+      <geom name="long_table_3_leg1" type="box" size="0.06 0.06 0.375" pos="-2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_3_leg2" type="box" size="0.06 0.06 0.375" pos="-2.2 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_3_leg3" type="box" size="0.06 0.06 0.375" pos="0 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_3_leg4" type="box" size="0.06 0.06 0.375" pos="0 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_3_leg5" type="box" size="0.06 0.06 0.375" pos="2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_3_leg6" type="box" size="0.06 0.06 0.375" pos="2.2 0.6 0.375" material="metal_dark" />
+
+      
+      <geom name="divider_3_1" type="box" size="0.02 0.35 0.4" pos="-1.6 0 1.15" material="wood_light" />
+      <geom name="divider_3_2" type="box" size="0.02 0.35 0.4" pos="-0.8 0 1.15" material="wood_light" />
+      <geom name="divider_3_3" type="box" size="0.02 0.35 0.4" pos="0 0 1.15" material="wood_light" />
+      <geom name="divider_3_4" type="box" size="0.02 0.35 0.4" pos="0.8 0 1.15" material="wood_light" />
+      <geom name="divider_3_5" type="box" size="0.02 0.35 0.4" pos="1.6 0 1.15" material="wood_light" />
+
+      
+      <geom name="book_s3_1" type="box" size="0.12 0.18 0.025" pos="-2.0 0.15 0.805" material="book_blue" />
+      <geom name="book_s3_2" type="box" size="0.14 0.2 0.03" pos="-2.0 0.15 0.855" material="book_green" />
+
+      
+      <geom name="laptop_3_2_base" type="box" size="0.15 0.22 0.015" pos="-1.2 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_3_2_screen" type="box" size="0.15 0.01 0.2" pos="-1.2 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s3_4_1" type="box" size="0.13 0.19 0.028" pos="0.4 0.2 0.803" material="book_brown" />
+
+      
+      <geom name="laptop_3_5_base" type="box" size="0.15 0.22 0.015" pos="1.2 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_3_5_screen" type="box" size="0.15 0.01 0.2" pos="1.2 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+      <geom name="book_s3_6_1" type="box" size="0.11 0.16 0.024" pos="2.0 -0.1 0.799" material="book_red" />
+      <geom name="book_s3_6_2" type="box" size="0.12 0.17 0.026" pos="2.0 0.15 0.799" material="book_black" />
+    </body>
+
+    
+    <body name="chair_3_1" pos="-7 6 0" euler="0 0 180">
+      <geom name="c3_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_1_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_1_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_1_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_1_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_1_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_1" pos="-7 5 0.75">
+      <geom name="l3_1_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_1_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_1_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-7 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_3_2" pos="-6.2 6 0" euler="0 0 180">
+      <geom name="c3_2_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_2_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_2_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_2_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_2_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_2_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_2" pos="-6.2 5 0.75">
+      <geom name="l3_2_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_2_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_2_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-6.2 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_3_3" pos="-5.4 6 0" euler="0 0 180">
+      <geom name="c3_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_3_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_3_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_3_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_3_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_3_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_3" pos="-5.4 5 0.75">
+      <geom name="l3_3_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_3_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_3_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-5.4 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_3_4" pos="-4.6 6 0" euler="0 0 180">
+      <geom name="c3_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_4_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_4_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_4_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_4_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_4_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_4" pos="-4.6 5 0.75">
+      <geom name="l3_4_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_4_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_4_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-4.6 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_3_5" pos="-3.8 6 0" euler="0 0 180">
+      <geom name="c3_5_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_5_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_5_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_5_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_5_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_5_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_5" pos="-3.8 5 0.75">
+      <geom name="l3_5_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_5_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_5_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-3.8 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_3_6" pos="-3.0 6 0" euler="0 0 180">
+      <geom name="c3_6_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c3_6_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c3_6_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_6_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c3_6_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c3_6_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_3_6" pos="-3.0 5 0.75">
+      <geom name="l3_6_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l3_6_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l3_6_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-3.0 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body><body name="study_row_4" pos="5 5 0">
+      
+      <geom name="long_table_4_top" type="box" size="2.4 0.7 0.03" pos="0 0 0.75" material="wood_dark" />
+      <geom name="long_table_4_leg1" type="box" size="0.06 0.06 0.375" pos="-2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_4_leg2" type="box" size="0.06 0.06 0.375" pos="-2.2 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_4_leg3" type="box" size="0.06 0.06 0.375" pos="0 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_4_leg4" type="box" size="0.06 0.06 0.375" pos="0 0.6 0.375" material="metal_dark" />
+      <geom name="long_table_4_leg5" type="box" size="0.06 0.06 0.375" pos="2.2 -0.6 0.375" material="metal_dark" />
+      <geom name="long_table_4_leg6" type="box" size="0.06 0.06 0.375" pos="2.2 0.6 0.375" material="metal_dark" />
+
+      
+      <geom name="divider_4_1" type="box" size="0.02 0.35 0.4" pos="-1.6 0 1.15" material="wood_light" />
+      <geom name="divider_4_2" type="box" size="0.02 0.35 0.4" pos="-0.8 0 1.15" material="wood_light" />
+      <geom name="divider_4_3" type="box" size="0.02 0.35 0.4" pos="0 0 1.15" material="wood_light" />
+      <geom name="divider_4_4" type="box" size="0.02 0.35 0.4" pos="0.8 0 1.15" material="wood_light" />
+      <geom name="divider_4_5" type="box" size="0.02 0.35 0.4" pos="1.6 0 1.15" material="wood_light" />
+
+      
+      <geom name="laptop_4_1_base" type="box" size="0.15 0.22 0.015" pos="-2.0 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_4_1_screen" type="box" size="0.15 0.01 0.2" pos="-2.0 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s4_3_1" type="box" size="0.14 0.19 0.027" pos="-0.4 0.15 0.801" material="book_green" />
+      <geom name="book_s4_3_2" type="box" size="0.12 0.17 0.025" pos="-0.4 -0.1 0.801" material="book_blue" />
+
+      
+      <geom name="laptop_4_4_base" type="box" size="0.15 0.22 0.015" pos="0.4 0.1 0.795" material="metal_dark" />
+      <geom name="laptop_4_4_screen" type="box" size="0.15 0.01 0.2" pos="0.4 0.32 0.95" quat="0.96 0.28 0 0" rgba="0.1 0.1 0.12 1" />
+
+      
+
+      
+      <geom name="book_s4_6_1" type="box" size="0.13 0.18 0.026" pos="2.0 0.2 0.801" material="book_brown" />
+    </body>
+
+    
+    <body name="chair_4_1" pos="3 6 0" euler="0 0 180">
+      <geom name="c4_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_1_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_1_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_1_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_1_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_1_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_1" pos="3 5 0.75">
+      <geom name="l4_1_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_1_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_1_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="3 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_4_2" pos="3.8 6 0" euler="0 0 180">
+      <geom name="c4_2_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_2_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_2_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_2_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_2_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_2_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_2" pos="3.8 5 0.75">
+      <geom name="l4_2_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_2_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_2_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="3.8 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_4_3" pos="4.6 6 0" euler="0 0 180">
+      <geom name="c4_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_3_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_3_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_3_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_3_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_3_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_3" pos="4.6 5 0.75">
+      <geom name="l4_3_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_3_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_3_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="4.6 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_4_4" pos="5.4 6 0" euler="0 0 180">
+      <geom name="c4_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_4_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_4_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_4_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_4_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_4_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_4" pos="5.4 5 0.75">
+      <geom name="l4_4_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_4_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_4_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="5.4 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_4_5" pos="6.2 6 0" euler="0 0 180">
+      <geom name="c4_5_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_5_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_5_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_5_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_5_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_5_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_5" pos="6.2 5 0.75">
+      <geom name="l4_5_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_5_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_5_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="6.2 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <body name="chair_4_6" pos="7 6 0" euler="0 0 180">
+      <geom name="c4_6_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0.5" material="wood_light" />
+      <geom name="c4_6_back" type="box" size="0.25 0.03 0.4" pos="0 -0.22 0.8" material="wood_light" />
+      <geom name="c4_6_leg1" type="cylinder" size="0.02 0.25" pos="-0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_6_leg2" type="cylinder" size="0.02 0.25" pos="0.18 -0.18 0.25" material="metal_dark" />
+      <geom name="c4_6_leg3" type="cylinder" size="0.02 0.25" pos="-0.18 0.18 0.25" material="metal_dark" />
+      <geom name="c4_6_leg4" type="cylinder" size="0.02 0.25" pos="0.18 0.18 0.25" material="metal_dark" />
+    </body>
+    <body name="lamp_4_6" pos="7 5 0.75">
+      <geom name="l4_6_base" type="cylinder" size="0.06 0.015" pos="0 -0.5 0.03" material="metal_dark" />
+      <geom name="l4_6_pole" type="cylinder" size="0.012 0.2" pos="0 -0.5 0.23" material="metal_dark" />
+      <geom name="l4_6_shade" type="cylinder" size="0.1 0.06" pos="0 -0.5 0.5" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="7 7.5 1.25" dir="0 0 -1" castshadow="false" cutoff="40" />
+    </body>
+
+    <camera name="entrance_view" pos="0 12 3" xyaxes="1 0 0 0 0.3 0.95" mode="fixed" />
+    <camera name="lounge_view" pos="0 5 2.5" xyaxes="1 0 0 0 0.6 0.8" mode="fixed" />
+    <camera name="reading_view" pos="0 -3 2.5" xyaxes="1 0 0 0 0.6 0.8" mode="fixed" />
+    <camera name="top_view" pos="0 0 25" xyaxes="1 0 0 0 1 0" mode="fixed" />
+    <camera name="side_view" pos="-15 0 5" xyaxes="0 1 0 -0.3 0 0.95" mode="fixed" />
+
+    
+    
+    
+    <body name="left_wall_high_tables">
+      <geom name="left_high_table_1" type="box" size="0.5 0.5 0.05" pos="-9.5 -7 1.2" material="wood_dark" />
+      <geom name="left_high_table_1_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 -7 0.6" material="metal_dark" />
+      <geom name="left_high_table_1_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 -7 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht1_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 -7 1.22" material="metal_dark" />
+      <geom name="left_ht1_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 -7 1.42" material="metal_dark" />
+      <geom name="left_ht1_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 -7 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 -7 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="left_ht1_drink" type="cylinder" size="0.05 0.1" pos="-9.5 -7.15 1.3" rgba="0.3 0.6 0.9 0.8" />
+      
+      <geom name="left_high_table_2" type="box" size="0.5 0.5 0.05" pos="-9.5 -5 1.2" material="wood_dark" />
+      <geom name="left_high_table_2_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 -5 0.6" material="metal_dark" />
+      <geom name="left_high_table_2_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 -5 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht2_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 -5 1.22" material="metal_dark" />
+      <geom name="left_ht2_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 -5 1.42" material="metal_dark" />
+      <geom name="left_ht2_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 -5 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 -5 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="left_ht2_book" type="box" size="0.12 0.18 0.025" pos="-9.5 -5.15 1.25" material="book_blue" />
+      
+      <geom name="left_high_table_3" type="box" size="0.5 0.5 0.05" pos="-9.5 -3 1.2" material="wood_dark" />
+      <geom name="left_high_table_3_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 -3 0.6" material="metal_dark" />
+      <geom name="left_high_table_3_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 -3 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht3_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 -3 1.22" material="metal_dark" />
+      <geom name="left_ht3_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 -3 1.42" material="metal_dark" />
+      <geom name="left_ht3_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 -3 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 -3 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="left_ht3_drink" type="cylinder" size="0.05 0.1" pos="-9.5 -3.15 1.3" rgba="0.9 0.5 0.3 0.8" />
+      
+      <geom name="left_high_table_4" type="box" size="0.5 0.5 0.05" pos="-9.5 -1 1.2" material="wood_dark" />
+      <geom name="left_high_table_4_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 -1 0.6" material="metal_dark" />
+      <geom name="left_high_table_4_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 -1 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht4_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 -1 1.22" material="metal_dark" />
+      <geom name="left_ht4_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 -1 1.42" material="metal_dark" />
+      <geom name="left_ht4_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 -1 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 -1 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="left_ht4_book" type="box" size="0.14 0.2 0.03" pos="-9.5 -1.15 1.25" material="book_green" />
+      
+      <geom name="left_high_table_5" type="box" size="0.5 0.5 0.05" pos="-9.5 1 1.2" material="wood_dark" />
+      <geom name="left_high_table_5_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 1 0.6" material="metal_dark" />
+      <geom name="left_high_table_5_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 1 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht5_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 1 1.22" material="metal_dark" />
+      <geom name="left_ht5_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 1 1.42" material="metal_dark" />
+      <geom name="left_ht5_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 1 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 1 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="left_ht5_drink" type="cylinder" size="0.05 0.1" pos="-9.5 0.85 1.3" rgba="0.7 0.4 0.9 0.8" />
+      
+      <geom name="left_high_table_6" type="box" size="0.5 0.5 0.05" pos="-9.5 3 1.2" material="wood_dark" />
+      <geom name="left_high_table_6_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 3 0.6" material="metal_dark" />
+      <geom name="left_high_table_6_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 3 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht6_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 3 1.22" material="metal_dark" />
+      <geom name="left_ht6_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 3 1.42" material="metal_dark" />
+      <geom name="left_ht6_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 3 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 3 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="left_ht6_book" type="box" size="0.13 0.19 0.028" pos="-9.5 2.85 1.25" material="book_brown" />
+      
+      <geom name="left_high_table_7" type="box" size="0.5 0.5 0.05" pos="-9.5 5 1.2" material="wood_dark" />
+      <geom name="left_high_table_7_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 5 0.6" material="metal_dark" />
+      <geom name="left_high_table_7_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 5 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht7_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 5 1.22" material="metal_dark" />
+      <geom name="left_ht7_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 5 1.42" material="metal_dark" />
+      <geom name="left_ht7_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 5 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 5 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="left_ht7_drink" type="cylinder" size="0.05 0.1" pos="-9.5 4.85 1.3" rgba="0.9 0.7 0.3 0.8" />
+      
+      <geom name="left_high_table_8" type="box" size="0.5 0.5 0.05" pos="-9.5 7 1.2" material="wood_dark" />
+      <geom name="left_high_table_8_leg1" type="cylinder" size="0.04 0.6" pos="-9.8 7 0.6" material="metal_dark" />
+      <geom name="left_high_table_8_leg2" type="cylinder" size="0.04 0.6" pos="-9.2 7 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="left_ht8_lamp_base" type="cylinder" size="0.06 0.015" pos="-9.3 7 1.22" material="metal_dark" />
+      <geom name="left_ht8_lamp_pole" type="cylinder" size="0.012 0.2" pos="-9.3 7 1.42" material="metal_dark" />
+      <geom name="left_ht8_lamp_shade" type="cylinder" size="0.1 0.06" pos="-9.3 7 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="-9.3 7 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="left_ht8_book" type="box" size="0.11 0.16 0.024" pos="-9.5 6.85 1.25" material="book_red" />
+    </body>
+    
+    
+    <body name="left_wall_high_stools">
+      <geom name="left_high_stool_1_seat" type="cylinder" size="0.3 0.03" pos="-8.5 -7 1.0" material="wood_light" />
+      <geom name="left_high_stool_1_leg" type="cylinder" size="0.03 0.5" pos="-8.5 -7 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_2_seat" type="cylinder" size="0.3 0.03" pos="-8.5 -5 1.0" material="wood_light" />
+      <geom name="left_high_stool_2_leg" type="cylinder" size="0.03 0.5" pos="-8.5 -5 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_3_seat" type="cylinder" size="0.3 0.03" pos="-8.5 -3 1.0" material="wood_light" />
+      <geom name="left_high_stool_3_leg" type="cylinder" size="0.03 0.5" pos="-8.5 -3 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_4_seat" type="cylinder" size="0.3 0.03" pos="-8.5 -1 1.0" material="wood_light" />
+      <geom name="left_high_stool_4_leg" type="cylinder" size="0.03 0.5" pos="-8.5 -1 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_5_seat" type="cylinder" size="0.3 0.03" pos="-8.5 1 1.0" material="wood_light" />
+      <geom name="left_high_stool_5_leg" type="cylinder" size="0.03 0.5" pos="-8.5 1 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_6_seat" type="cylinder" size="0.3 0.03" pos="-8.5 3 1.0" material="wood_light" />
+      <geom name="left_high_stool_6_leg" type="cylinder" size="0.03 0.5" pos="-8.5 3 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_7_seat" type="cylinder" size="0.3 0.03" pos="-8.5 5 1.0" material="wood_light" />
+      <geom name="left_high_stool_7_leg" type="cylinder" size="0.03 0.5" pos="-8.5 5 0.5" material="metal_dark" />
+      
+      <geom name="left_high_stool_8_seat" type="cylinder" size="0.3 0.03" pos="-8.5 7 1.0" material="wood_light" />
+      <geom name="left_high_stool_8_leg" type="cylinder" size="0.03 0.5" pos="-8.5 7 0.5" material="metal_dark" />
+    </body>
+    
+    
+    <body name="right_wall_high_tables">
+      <geom name="right_high_table_1" type="box" size="0.5 0.5 0.05" pos="9.5 -7 1.2" material="wood_dark" />
+      <geom name="right_high_table_1_leg1" type="cylinder" size="0.04 0.6" pos="9.8 -7 0.6" material="metal_dark" />
+      <geom name="right_high_table_1_leg2" type="cylinder" size="0.04 0.6" pos="9.2 -7 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht1_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 -7 1.22" material="metal_dark" />
+      <geom name="right_ht1_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 -7 1.42" material="metal_dark" />
+      <geom name="right_ht1_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 -7 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 -7 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="right_ht1_book" type="box" size="0.12 0.18 0.025" pos="9.5 -7.15 1.25" material="book_green" />
+      
+      <geom name="right_high_table_2" type="box" size="0.5 0.5 0.05" pos="9.5 -5 1.2" material="wood_dark" />
+      <geom name="right_high_table_2_leg1" type="cylinder" size="0.04 0.6" pos="9.8 -5 0.6" material="metal_dark" />
+      <geom name="right_high_table_2_leg2" type="cylinder" size="0.04 0.6" pos="9.2 -5 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht2_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 -5 1.22" material="metal_dark" />
+      <geom name="right_ht2_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 -5 1.42" material="metal_dark" />
+      <geom name="right_ht2_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 -5 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 -5 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="right_ht2_drink" type="cylinder" size="0.05 0.1" pos="9.5 -5.15 1.3" rgba="0.9 0.5 0.3 0.8" />
+      
+      <geom name="right_high_table_3" type="box" size="0.5 0.5 0.05" pos="9.5 -3 1.2" material="wood_dark" />
+      <geom name="right_high_table_3_leg1" type="cylinder" size="0.04 0.6" pos="9.8 -3 0.6" material="metal_dark" />
+      <geom name="right_high_table_3_leg2" type="cylinder" size="0.04 0.6" pos="9.2 -3 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht3_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 -3 1.22" material="metal_dark" />
+      <geom name="right_ht3_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 -3 1.42" material="metal_dark" />
+      <geom name="right_ht3_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 -3 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 -3 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="right_ht3_book" type="box" size="0.14 0.2 0.03" pos="9.5 -3.15 1.25" material="book_blue" />
+      
+      <geom name="right_high_table_4" type="box" size="0.5 0.5 0.05" pos="9.5 -1 1.2" material="wood_dark" />
+      <geom name="right_high_table_4_leg1" type="cylinder" size="0.04 0.6" pos="9.8 -1 0.6" material="metal_dark" />
+      <geom name="right_high_table_4_leg2" type="cylinder" size="0.04 0.6" pos="9.2 -1 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht4_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 -1 1.22" material="metal_dark" />
+      <geom name="right_ht4_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 -1 1.42" material="metal_dark" />
+      <geom name="right_ht4_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 -1 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 -1 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="right_ht4_drink" type="cylinder" size="0.05 0.1" pos="9.5 -1.15 1.3" rgba="0.3 0.6 0.9 0.8" />
+      
+      <geom name="right_high_table_5" type="box" size="0.5 0.5 0.05" pos="9.5 1 1.2" material="wood_dark" />
+      <geom name="right_high_table_5_leg1" type="cylinder" size="0.04 0.6" pos="9.8 1 0.6" material="metal_dark" />
+      <geom name="right_high_table_5_leg2" type="cylinder" size="0.04 0.6" pos="9.2 1 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht5_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 1 1.22" material="metal_dark" />
+      <geom name="right_ht5_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 1 1.42" material="metal_dark" />
+      <geom name="right_ht5_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 1 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 1 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="right_ht5_book" type="box" size="0.13 0.19 0.028" pos="9.5 0.85 1.25" material="book_red" />
+      
+      <geom name="right_high_table_6" type="box" size="0.5 0.5 0.05" pos="9.5 3 1.2" material="wood_dark" />
+      <geom name="right_high_table_6_leg1" type="cylinder" size="0.04 0.6" pos="9.8 3 0.6" material="metal_dark" />
+      <geom name="right_high_table_6_leg2" type="cylinder" size="0.04 0.6" pos="9.2 3 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht6_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 3 1.22" material="metal_dark" />
+      <geom name="right_ht6_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 3 1.42" material="metal_dark" />
+      <geom name="right_ht6_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 3 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 3 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="right_ht6_drink" type="cylinder" size="0.05 0.1" pos="9.5 2.85 1.3" rgba="0.9 0.7 0.3 0.8" />
+      
+      <geom name="right_high_table_7" type="box" size="0.5 0.5 0.05" pos="9.5 5 1.2" material="wood_dark" />
+      <geom name="right_high_table_7_leg1" type="cylinder" size="0.04 0.6" pos="9.8 5 0.6" material="metal_dark" />
+      <geom name="right_high_table_7_leg2" type="cylinder" size="0.04 0.6" pos="9.2 5 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht7_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 5 1.22" material="metal_dark" />
+      <geom name="right_ht7_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 5 1.42" material="metal_dark" />
+      <geom name="right_ht7_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 5 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 5 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 书籍 -->
+      <geom name="right_ht7_book" type="box" size="0.11 0.16 0.024" pos="9.5 4.85 1.25" material="book_brown" />
+      
+      <geom name="right_high_table_8" type="box" size="0.5 0.5 0.05" pos="9.5 7 1.2" material="wood_dark" />
+      <geom name="right_high_table_8_leg1" type="cylinder" size="0.04 0.6" pos="9.8 7 0.6" material="metal_dark" />
+      <geom name="right_high_table_8_leg2" type="cylinder" size="0.04 0.6" pos="9.2 7 0.6" material="metal_dark" />
+      <!-- 小灯 -->
+      <geom name="right_ht8_lamp_base" type="cylinder" size="0.06 0.015" pos="9.3 7 1.22" material="metal_dark" />
+      <geom name="right_ht8_lamp_pole" type="cylinder" size="0.012 0.2" pos="9.3 7 1.42" material="metal_dark" />
+      <geom name="right_ht8_lamp_shade" type="cylinder" size="0.1 0.06" pos="9.3 7 1.72" rgba="0.95 0.9 0.85 0.7" />
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.65" specular="0.3 0.3 0.2" pos="9.3 7 1.9" dir="0 0 -1" castshadow="false" cutoff="30" />
+      <!-- 随机物品 - 饮料 -->
+      <geom name="right_ht8_drink" type="cylinder" size="0.05 0.1" pos="9.5 6.85 1.3" rgba="0.7 0.4 0.9 0.8" />
+    </body>
+    
+    
+    <body name="right_wall_high_stools">
+      <geom name="right_high_stool_1_seat" type="cylinder" size="0.3 0.03" pos="8.5 -7 1.0" material="wood_light" />
+      <geom name="right_high_stool_1_leg" type="cylinder" size="0.03 0.5" pos="8.5 -7 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_2_seat" type="cylinder" size="0.3 0.03" pos="8.5 -5 1.0" material="wood_light" />
+      <geom name="right_high_stool_2_leg" type="cylinder" size="0.03 0.5" pos="8.5 -5 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_3_seat" type="cylinder" size="0.3 0.03" pos="8.5 -3 1.0" material="wood_light" />
+      <geom name="right_high_stool_3_leg" type="cylinder" size="0.03 0.5" pos="8.5 -3 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_4_seat" type="cylinder" size="0.3 0.03" pos="8.5 -1 1.0" material="wood_light" />
+      <geom name="right_high_stool_4_leg" type="cylinder" size="0.03 0.5" pos="8.5 -1 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_5_seat" type="cylinder" size="0.3 0.03" pos="8.5 1 1.0" material="wood_light" />
+      <geom name="right_high_stool_5_leg" type="cylinder" size="0.03 0.5" pos="8.5 1 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_6_seat" type="cylinder" size="0.3 0.03" pos="8.5 3 1.0" material="wood_light" />
+      <geom name="right_high_stool_6_leg" type="cylinder" size="0.03 0.5" pos="8.5 3 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_7_seat" type="cylinder" size="0.3 0.03" pos="8.5 5 1.0" material="wood_light" />
+      <geom name="right_high_stool_7_leg" type="cylinder" size="0.03 0.5" pos="8.5 5 0.5" material="metal_dark" />
+      
+      <geom name="right_high_stool_8_seat" type="cylinder" size="0.3 0.03" pos="8.5 7 1.0" material="wood_light" />
+      <geom name="right_high_stool_8_leg" type="cylinder" size="0.03 0.5" pos="8.5 7 0.5" material="metal_dark" />
+    </body>
+    
+    <!-- 小矮书柜 - 左侧新增 -->
+    <body name="short_bookshelf_left_1" pos="-6 0 0">
+        <!-- 书柜框架 -->
+        <geom name="sbl1_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="sbl1_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="sbl1_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="sbl1_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="sbl1_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="sbl1_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0.1 1.0" material="wood_beige" />
+        <geom name="sbl1_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0.1 2.0" material="wood_beige" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="sbl1_book1" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 0.5" material="book_blue" />
+        <geom name="sbl1_book2" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 0.5" material="book_red" />
+        <geom name="sbl1_book3" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 0.5" material="book_green" />
+        <geom name="sbl1_book4" type="box" size="0.11 0.16 0.024" pos="0 0.05 0.5" material="book_brown" />
+        <geom name="sbl1_book5" type="box" size="0.12 0.18 0.025" pos="0.15 0.05 0.5" material="book_blue" />
+        <geom name="sbl1_book6" type="box" size="0.14 0.2 0.03" pos="0.3 0.05 0.5" material="book_red" />
+        <geom name="sbl1_book7" type="box" size="0.12 0.18 0.025" pos="-0.45 -0.05 0.5" material="book_green" />
+        <geom name="sbl1_book8" type="box" size="0.14 0.2 0.03" pos="-0.3 -0.05 0.5" material="book_brown" />
+        <geom name="sbl1_book9" type="box" size="0.13 0.19 0.028" pos="-0.15 -0.05 0.5" material="book_black" />
+        <geom name="sbl1_book10" type="box" size="0.11 0.16 0.024" pos="0 -0.05 0.5" material="book_blue" />
+        <geom name="sbl1_book11" type="box" size="0.12 0.18 0.025" pos="0.15 -0.05 0.5" material="book_red" />
+        <geom name="sbl1_book12" type="box" size="0.14 0.2 0.03" pos="0.3 -0.05 0.5" material="book_green" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="sbl1_book13" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 1.5" material="book_green" />
+        <geom name="sbl1_book14" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 1.5" material="book_brown" />
+        <geom name="sbl1_book15" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 1.5" material="book_blue" />
+        <geom name="sbl1_book16" type="box" size="0.14 0.2 0.03" pos="0 0.05 1.5" material="book_red" />
+        <geom name="sbl1_book17" type="box" size="0.13 0.19 0.028" pos="0.15 0.05 1.5" material="book_green" />
+        <geom name="sbl1_book18" type="box" size="0.14 0.2 0.03" pos="0.3 0.05 1.5" material="book_brown" />
+        <geom name="sbl1_book19" type="box" size="0.12 0.18 0.025" pos="-0.45 -0.05 1.5" material="book_black" />
+        <geom name="sbl1_book20" type="box" size="0.14 0.2 0.03" pos="-0.3 -0.05 1.5" material="book_blue" />
+        <geom name="sbl1_book21" type="box" size="0.13 0.19 0.028" pos="-0.15 -0.05 1.5" material="book_red" />
+        <geom name="sbl1_book22" type="box" size="0.11 0.16 0.024" pos="0 -0.05 1.5" material="book_green" />
+        <geom name="sbl1_book23" type="box" size="0.12 0.18 0.025" pos="0.15 -0.05 1.5" material="book_brown" />
+        <geom name="sbl1_book24" type="box" size="0.14 0.2 0.03" pos="0.3 -0.05 1.5" material="book_black" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="sbl1_book25" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 2.5" material="book_brown" />
+        <geom name="sbl1_book26" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 2.5" material="book_blue" />
+        <geom name="sbl1_book27" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 2.5" material="book_red" />
+        <geom name="sbl1_book28" type="box" size="0.13 0.19 0.028" pos="0 0.05 2.5" material="book_green" />
+        <geom name="sbl1_book29" type="box" size="0.12 0.18 0.025" pos="0.15 0.05 2.5" material="book_brown" />
+        <geom name="sbl1_book30" type="box" size="0.14 0.2 0.03" pos="0.3 0.05 2.5" material="book_blue" />
+        <geom name="sbl1_book31" type="box" size="0.11 0.16 0.024" pos="-0.45 -0.05 2.5" material="book_black" />
+        <geom name="sbl1_book32" type="box" size="0.12 0.18 0.025" pos="-0.3 -0.05 2.5" material="book_red" />
+        <geom name="sbl1_book33" type="box" size="0.14 0.2 0.03" pos="-0.15 -0.05 2.5" material="book_green" />
+        <geom name="sbl1_book34" type="box" size="0.13 0.19 0.028" pos="0 -0.05 2.5" material="book_brown" />
+        <geom name="sbl1_book35" type="box" size="0.12 0.18 0.025" pos="0.15 -0.05 2.5" material="book_blue" />
+        <geom name="sbl1_book36" type="box" size="0.14 0.2 0.03" pos="0.3 -0.05 2.5" material="book_black" />
+    </body>
+    
+    <!-- 小矮书柜1 -->
+    <body name="short_bookshelf_1" pos="-3 0 0">
+        <!-- 书柜框架 -->
+        <geom name="sb1_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="sb1_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="sb1_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="sb1_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="sb1_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="sb1_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="sb1_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+
+    </body>
+    
+    <!-- 小矮书柜2 -->
+    <body name="short_bookshelf_2" pos="0 0 0">
+        <!-- 书柜框架 -->
+        <geom name="sb2_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="sb2_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="sb2_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="sb2_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="sb2_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="sb2_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="sb2_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+
+    </body>
+    
+    <!-- 小矮书柜3 -->
+    <body name="short_bookshelf_3" pos="3 0 0">
+        <!-- 书柜框架 -->
+        <geom name="sb3_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="sb3_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="sb3_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="sb3_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="sb3_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="sb3_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="sb3_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+
+    </body>
+    
+    <!-- 小矮书柜4 -->
+    <body name="short_bookshelf_4" pos="6 0 0">
+        <!-- 书柜框架 -->
+        <geom name="sb4_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="sb4_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="sb4_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="sb4_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="sb4_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="sb4_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="sb4_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+
+    </body>
+    
+    <!-- 中间区域新柜子 - 第一排 y=-2 -->
+    
+    <body name="middle_bookshelf_1" pos="-4.4 -2 0">
+        <!-- 书柜框架 -->
+        <geom name="mb1_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="mb1_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="mb1_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="mb1_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="mb1_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="mb1_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="mb1_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb1_book1" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 0.5" material="book_blue" />
+        <geom name="mb1_book2" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 0.5" material="book_red" />
+        <geom name="mb1_book3" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 0.5" material="book_green" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb1_book4" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 1.5" material="book_brown" />
+        <geom name="mb1_book5" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 1.5" material="book_blue" />
+        <geom name="mb1_book6" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 1.5" material="book_red" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb1_book7" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 2.5" material="book_green" />
+        <geom name="mb1_book8" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 2.5" material="book_brown" />
+        <geom name="mb1_book9" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 2.5" material="book_blue" />
+    </body>
+    
+    <body name="middle_bookshelf_2" pos="-1.4 -2 0">
+        <!-- 书柜框架 -->
+        <geom name="mb2_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_shelf" />
+        <geom name="mb2_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb2_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb2_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_shelf" />
+        <geom name="mb2_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_shelf" />
+        
+        <!-- 隔板 -->
+        <geom name="mb2_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_shelf" />
+        <geom name="mb2_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_shelf" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb2_book1" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 0.5" material="book_red" />
+        <geom name="mb2_book2" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 0.5" material="book_green" />
+        <geom name="mb2_book3" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 0.5" material="book_brown" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb2_book4" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 1.5" material="book_blue" />
+        <geom name="mb2_book5" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 1.5" material="book_red" />
+        <geom name="mb2_book6" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 1.5" material="book_green" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb2_book7" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 2.5" material="book_brown" />
+        <geom name="mb2_book8" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 2.5" material="book_blue" />
+        <geom name="mb2_book9" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 2.5" material="book_red" />
+    </body>
+    
+    <body name="middle_bookshelf_3" pos="1.6 -2 0">
+        <!-- 书柜框架 -->
+        <geom name="mb3_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="mb3_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="mb3_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="mb3_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="mb3_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="mb3_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="mb3_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb3_book1" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 0.5" material="book_green" />
+        <geom name="mb3_book2" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 0.5" material="book_brown" />
+        <geom name="mb3_book3" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 0.5" material="book_blue" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb3_book4" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 1.5" material="book_red" />
+        <geom name="mb3_book5" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 1.5" material="book_green" />
+        <geom name="mb3_book6" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 1.5" material="book_brown" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb3_book7" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 2.5" material="book_blue" />
+        <geom name="mb3_book8" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 2.5" material="book_red" />
+        <geom name="mb3_book9" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 2.5" material="book_green" />
+    </body>
+    
+    <body name="middle_bookshelf_4" pos="4.6 -2 0">
+        <!-- 书柜框架 -->
+        <geom name="mb4_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_shelf" />
+        <geom name="mb4_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb4_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb4_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_shelf" />
+        <geom name="mb4_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_shelf" />
+        
+        <!-- 隔板 -->
+        <geom name="mb4_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_shelf" />
+        <geom name="mb4_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_shelf" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb4_book1" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 0.5" material="book_brown" />
+        <geom name="mb4_book2" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 0.5" material="book_blue" />
+        <geom name="mb4_book3" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 0.5" material="book_red" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb4_book4" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 1.5" material="book_green" />
+        <geom name="mb4_book5" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 1.5" material="book_brown" />
+        <geom name="mb4_book6" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 1.5" material="book_blue" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb4_book7" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 2.5" material="book_red" />
+        <geom name="mb4_book8" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 2.5" material="book_green" />
+        <geom name="mb4_book9" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 2.5" material="book_brown" />
+    </body>
+    
+    <!-- 中间区域新柜子 - 第二排 y=-3.5 -->
+    <!-- 中间区域柜子 - 左侧新增 -->
+    <body name="middle_bookshelf_left_2" pos="-6 -3.5 0">
+        <!-- 书柜框架 -->
+        <geom name="mbl2_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_shelf" />
+        <geom name="mbl2_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_shelf" />
+        <geom name="mbl2_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_shelf" />
+        <geom name="mbl2_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_shelf" />
+        <geom name="mbl2_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_shelf" />
+        
+        <!-- 隔板 -->
+        <geom name="mbl2_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_shelf" />
+        <geom name="mbl2_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_shelf" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mbl2_book1" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 0.5" material="book_blue" />
+        <geom name="mbl2_book2" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 0.5" material="book_red" />
+        <geom name="mbl2_book3" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 0.5" material="book_green" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mbl2_book4" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 1.5" material="book_brown" />
+        <geom name="mbl2_book5" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 1.5" material="book_blue" />
+        <geom name="mbl2_book6" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 1.5" material="book_red" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mbl2_book7" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 2.5" material="book_green" />
+        <geom name="mbl2_book8" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 2.5" material="book_brown" />
+        <geom name="mbl2_book9" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 2.5" material="book_blue" />
+    </body>
+    
+    <body name="middle_bookshelf_5" pos="-3 -3.5 0">
+        <!-- 书柜框架 -->
+        <geom name="mb5_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_shelf" />
+        <geom name="mb5_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb5_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb5_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_shelf" />
+        <geom name="mb5_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_shelf" />
+        
+        <!-- 隔板 -->
+        <geom name="mb5_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_shelf" />
+        <geom name="mb5_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_shelf" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb5_book1" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 0.5" material="book_blue" />
+        <geom name="mb5_book2" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 0.5" material="book_red" />
+        <geom name="mb5_book3" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 0.5" material="book_green" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb5_book4" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 1.5" material="book_brown" />
+        <geom name="mb5_book5" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 1.5" material="book_blue" />
+        <geom name="mb5_book6" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 1.5" material="book_red" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb5_book7" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 2.5" material="book_green" />
+        <geom name="mb5_book8" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 2.5" material="book_brown" />
+        <geom name="mb5_book9" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 2.5" material="book_blue" />
+    </body>
+    
+    <body name="middle_bookshelf_6" pos="0 -3.5 0">
+        <!-- 书柜框架 -->
+        <geom name="mb6_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="mb6_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="mb6_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="mb6_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="mb6_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="mb6_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="mb6_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb6_book1" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 0.5" material="book_red" />
+        <geom name="mb6_book2" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 0.5" material="book_green" />
+        <geom name="mb6_book3" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 0.5" material="book_brown" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb6_book4" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 1.5" material="book_blue" />
+        <geom name="mb6_book5" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 1.5" material="book_red" />
+        <geom name="mb6_book6" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 1.5" material="book_green" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb6_book7" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 2.5" material="book_brown" />
+        <geom name="mb6_book8" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 2.5" material="book_blue" />
+        <geom name="mb6_book9" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 2.5" material="book_red" />
+    </body>
+    
+    <body name="middle_bookshelf_7" pos="3 -3.5 0">
+        <!-- 书柜框架 -->
+        <geom name="mb7_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_shelf" />
+        <geom name="mb7_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb7_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_shelf" />
+        <geom name="mb7_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_shelf" />
+        <geom name="mb7_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_shelf" />
+        
+        <!-- 隔板 -->
+        <geom name="mb7_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_shelf" />
+        <geom name="mb7_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_shelf" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb7_book1" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 0.5" material="book_green" />
+        <geom name="mb7_book2" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 0.5" material="book_brown" />
+        <geom name="mb7_book3" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 0.5" material="book_blue" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb7_book4" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 1.5" material="book_red" />
+        <geom name="mb7_book5" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 1.5" material="book_green" />
+        <geom name="mb7_book6" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 1.5" material="book_brown" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb7_book7" type="box" size="0.12 0.18 0.025" pos="-0.45 0.05 2.5" material="book_blue" />
+        <geom name="mb7_book8" type="box" size="0.14 0.2 0.03" pos="-0.3 0.05 2.5" material="book_red" />
+        <geom name="mb7_book9" type="box" size="0.13 0.19 0.028" pos="-0.15 0.05 2.5" material="book_green" />
+    </body>
+    
+    <body name="middle_bookshelf_8" pos="6 -3.5 0">
+        <!-- 书柜框架 -->
+        <geom name="mb8_back" type="box" size="0.6 0.05 1.5" pos="0 0 1.5" material="wood_beige" />
+        <geom name="mb8_left_side" type="box" size="0.05 0.2 1.5" pos="-0.6 0 1.5" material="wood_beige" />
+        <geom name="mb8_right_side" type="box" size="0.05 0.2 1.5" pos="0.6 0 1.5" material="wood_beige" />
+        <geom name="mb8_top" type="box" size="0.6 0.2 0.05" pos="0 0 3.0" material="wood_beige" />
+        <geom name="mb8_bottom" type="box" size="0.6 0.2 0.05" pos="0 0 0.0" material="wood_beige" />
+        
+        <!-- 隔板 -->
+        <geom name="mb8_shelf_1" type="box" size="0.6 0.2 0.03" pos="0 0 1.0" material="wood_beige" />
+        <geom name="mb8_shelf_2" type="box" size="0.6 0.2 0.03" pos="0 0 2.0" material="wood_beige" />
+        
+        <!-- 书籍 - 底层 -->
+        <geom name="mb8_book1" type="box" size="0.11 0.16 0.024" pos="-0.45 0.05 0.5" material="book_brown" />
+        <geom name="mb8_book2" type="box" size="0.12 0.18 0.025" pos="-0.3 0.05 0.5" material="book_blue" />
+        <geom name="mb8_book3" type="box" size="0.14 0.2 0.03" pos="-0.15 0.05 0.5" material="book_red" />
+        
+        <!-- 书籍 - 中层 -->
+        <geom name="mb8_book4" type="box" size="0.13 0.19 0.028" pos="-0.45 0.05 1.5" material="book_green" />
+        <geom name="mb8_book5" type="box" size="0.11 0.16 0.024" pos="-0.3 0.05 1.5" material="book_brown" />
+        <geom name="mb8_book6" type="box" size="0.12 0.18 0.025" pos="-0.15 0.05 1.5" material="book_blue" />
+        
+        <!-- 书籍 - 顶层 -->
+        <geom name="mb8_book7" type="box" size="0.14 0.2 0.03" pos="-0.45 0.05 2.5" material="book_red" />
+        <geom name="mb8_book8" type="box" size="0.13 0.19 0.028" pos="-0.3 0.05 2.5" material="book_green" />
+        <geom name="mb8_book9" type="box" size="0.11 0.16 0.024" pos="-0.15 0.05 2.5" material="book_brown" />
+    </body>
+    
+    <!-- 绿植 - 大门左侧 -->
+    <body name="plant_gate_left" pos="-4.5 7.0 0.5">
+        <!-- 花盆 -->
+        <geom name="pg_left_pot" type="cylinder" size="0.3 0.4" pos="0 0 0.2" material="ceramic_white" />
+        <!-- 茎干 -->
+        <geom name="pg_left_stem" type="cylinder" size="0.05 0.8" pos="0 0 1.0" material="wood_light" />
+        <!-- 叶子 -->
+        <geom name="pg_left_leaf1" type="sphere" size="0.3" pos="0 0.2 1.5" material="plant_green" />
+        <geom name="pg_left_leaf2" type="sphere" size="0.3" pos="0 -0.2 1.5" material="plant_green" />
+        <geom name="pg_left_leaf3" type="sphere" size="0.3" pos="0.2 0 1.5" material="plant_green" />
+        <geom name="pg_left_leaf4" type="sphere" size="0.3" pos="-0.2 0 1.5" material="plant_green" />
+        <geom name="pg_left_leaf5" type="sphere" size="0.35" pos="0 0 1.8" material="plant_green" />
+    </body>
+    
+    <!-- 绿植 - 大门右侧 -->
+    <body name="plant_gate_right" pos="4.5 7.0 0.5">
+        <!-- 花盆 -->
+        <geom name="pg_right_pot" type="cylinder" size="0.3 0.4" pos="0 0 0.2" material="ceramic_white" />
+        <!-- 茎干 -->
+        <geom name="pg_right_stem" type="cylinder" size="0.05 0.8" pos="0 0 1.0" material="wood_light" />
+        <!-- 叶子 -->
+        <geom name="pg_right_leaf1" type="sphere" size="0.3" pos="0 0.2 1.5" material="plant_green" />
+        <geom name="pg_right_leaf2" type="sphere" size="0.3" pos="0 -0.2 1.5" material="plant_green" />
+        <geom name="pg_right_leaf3" type="sphere" size="0.3" pos="0.2 0 1.5" material="plant_green" />
+        <geom name="pg_right_leaf4" type="sphere" size="0.3" pos="-0.2 0 1.5" material="plant_green" />
+        <geom name="pg_right_leaf5" type="sphere" size="0.35" pos="0 0 1.8" material="plant_green" />
+    </body>
+    
+    <!-- 绿植 - 大柜子左侧 -->
+    <body name="plant_cabinet_left" pos="-6 -7.0 0.5">
+        <!-- 花盆 -->
+        <geom name="pc_left_pot" type="cylinder" size="0.3 0.4" pos="0 0 0.2" material="ceramic_white" />
+        <!-- 茎干 -->
+        <geom name="pc_left_stem" type="cylinder" size="0.05 0.8" pos="0 0 1.0" material="wood_light" />
+        <!-- 叶子 -->
+        <geom name="pc_left_leaf1" type="sphere" size="0.3" pos="0 0.2 1.5" material="plant_green" />
+        <geom name="pc_left_leaf2" type="sphere" size="0.3" pos="0 -0.2 1.5" material="plant_green" />
+        <geom name="pc_left_leaf3" type="sphere" size="0.3" pos="0.2 0 1.5" material="plant_green" />
+        <geom name="pc_left_leaf4" type="sphere" size="0.3" pos="-0.2 0 1.5" material="plant_green" />
+        <geom name="pc_left_leaf5" type="sphere" size="0.35" pos="0 0 1.8" material="plant_green" />
+    </body>
+    
+    <!-- 绿植 - 大柜子右侧 -->
+    <body name="plant_cabinet_right" pos="6 -7.0 0.5">
+        <!-- 花盆 -->
+        <geom name="pc_right_pot" type="cylinder" size="0.3 0.4" pos="0 0 0.2" material="ceramic_white" />
+        <!-- 茎干 -->
+        <geom name="pc_right_stem" type="cylinder" size="0.05 0.8" pos="0 0 1.0" material="wood_light" />
+        <!-- 叶子 -->
+        <geom name="pc_right_leaf1" type="sphere" size="0.3" pos="0 0.2 1.5" material="plant_green" />
+        <geom name="pc_right_leaf2" type="sphere" size="0.3" pos="0 -0.2 1.5" material="plant_green" />
+        <geom name="pc_right_leaf3" type="sphere" size="0.3" pos="0.2 0 1.5" material="plant_green" />
+        <geom name="pc_right_leaf4" type="sphere" size="0.3" pos="-0.2 0 1.5" material="plant_green" />
+        <geom name="pc_right_leaf5" type="sphere" size="0.35" pos="0 0 1.8" material="plant_green" />
+    </body>
+  </worldbody>
+
+</mujoco>
