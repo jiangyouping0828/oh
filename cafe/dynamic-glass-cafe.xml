@@ -1,0 +1,1169 @@
+<mujoco model="dynamic_glass_cafe">
+  <!-- ========== 编译器设置 ========== -->
+  <!-- 模型名称：dynamic_glass_cafe - 动态玻璃咖啡厅 -->
+  <!-- angle="degree"：使用角度制而非弧度制 -->
+  <!-- coordinate="local"：使用局部坐标系 -->
+  <!-- inertiafromgeom="true"：从几何体自动计算惯性 -->
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+
+  <!-- ========== 物理选项 ========== -->
+  <!-- timestep="0.005"：时间步长为0.005秒，用于物理模拟精度 -->
+  <!-- gravity="0 0 -9.81"：重力加速度，Z轴向下9.81m/s² -->
+  <!-- iterations="50"：每次时间步长的迭代次数 -->
+  <!-- solver="Newton"：使用牛顿法求解器 -->
+  <!-- tolerance="1e-10"：求解器容差 -->
+  <option timestep="0.005" gravity="0 0 -9.81" iterations="50" solver="Newton" tolerance="1e-10">
+    <!-- contact="enable"：启用碰撞检测 -->
+    <!-- gravity="enable"：启用重力 -->
+    <flag contact="enable" gravity="enable"/>
+  </option>
+
+  <!-- ========== 默认设置 ========== -->
+  <!-- 为所有几何体、关节和电机设置默认参数 -->
+  <default>
+    <!-- 几何体默认设置 -->
+    <!-- conaffinity="1"：碰撞亲和性，控制哪些几何体可以相互碰撞 -->
+    <!-- condim="3"：接触维度，3表示3D接触 -->
+    <!-- friction="1 0.5 0.005"：摩擦系数（滑动、扭转、滚动） -->
+    <!-- solimp="0.9 0.95 0.001"：阻抗参数（阻尼、弹性、边界） -->
+    <!-- solref="0.02 1"：求解器参考参数（时间常数、阻尼比） -->
+    <geom conaffinity="1" condim="3" friction="1 0.5 0.005" solimp="0.9 0.95 0.001" solref="0.02 1"/>
+    
+    <!-- 关节默认设置 -->
+    <!-- damping="0.5"：关节阻尼系数 -->
+    <!-- armature="0.01"：关节惯性 -->
+    <joint damping="0.5" armature="0.01"/>
+    
+    <!-- 电机默认设置 -->
+    <!-- ctrlrange="-1 1"：控制范围从-1到1 -->
+    <!-- ctrllimited="true"：启用控制限制 -->
+    <motor ctrlrange="-1 1" ctrllimited="true"/>
+  </default>
+
+  <!-- ========== 视觉设置 ========== -->
+  <!-- 控制渲染和视觉效果的相关参数 -->
+  <visual>
+    <!-- 环境映射设置 -->
+    <!-- force="0.1"：环境光强度 -->
+    <!-- zfar="100"：最大可视距离 -->
+    <map force="0.1" zfar="100"/>
+    
+    <!-- 雾效设置 -->
+    <!-- haze="0.05 0.08 0.12 1"：雾效颜色和透明度（RGB+Alpha） -->
+    <rgba haze="0.05 0.08 0.12 1"/>
+    
+    <!-- 渲染质量设置 -->
+    <!-- shadowsize="4096"：阴影贴图分辨率 -->
+    <quality shadowsize="4096"/>
+    
+    <!-- 全局渲染设置 -->
+    <!-- offwidth="1280" offheight="720"：离屏渲染分辨率（1280x720） -->
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
+  <!-- ========== 资源定义 ========== -->
+  <!-- 定义场景中使用的纹理、材质等资源 -->
+  <asset>
+    <!-- ========== 木地板材质 ========== -->
+    <!-- 木地板纹理：使用内置棋盘格纹理模拟木地板效果 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- builtin="checker"：使用内置棋盘格纹理 -->
+    <!-- rgb1="0.55 0.45 0.35"：第一种颜色（浅棕色） -->
+    <!-- rgb2="0.5 0.4 0.3"：第二种颜色（深棕色） -->
+    <!-- width="512" height="512"：纹理分辨率 -->
+    <texture name="wood_floor" type="2d" builtin="checker" rgb1="0.55 0.45 0.35" rgb2="0.5 0.4 0.3" width="512" height="512"/>
+    
+    <!-- 木地板材质：应用木地板纹理并设置材质属性 -->
+    <!-- texture="wood_floor"：使用上面定义的木地板纹理 -->
+    <!-- texrepeat="10 10"：纹理重复次数（10x10） -->
+    <!-- specular="0.3"：镜面反射强度 -->
+    <!-- shininess="0.3"：光泽度 -->
+    <!-- reflectance="0.1"：反射率 -->
+    <material name="wood_floor_mat" texture="wood_floor" texrepeat="10 10" specular="0.3" shininess="0.3" reflectance="0.1"/>
+
+    <!-- ========== 玻璃材质 ========== -->
+    <!-- 高透明玻璃材质：用于窗户等透明玻璃 -->
+    <!-- rgba="0.8 0.9 0.95 0.15"：玻璃颜色（浅蓝绿色）和透明度（15%） -->
+    <!-- specular="1"：高镜面反射，模拟玻璃表面 -->
+    <!-- shininess="1"：高光泽度 -->
+    <!-- reflectance="0.7"：高反射率 -->
+    <material name="glass_clear" rgba="0.8 0.9 0.95 0.15" specular="1" shininess="1" reflectance="0.7"/>
+
+    <!-- 半透明玻璃门材质：用于玻璃门，比窗户稍不透明 -->
+    <!-- rgba="0.75 0.85 0.9 0.25"：玻璃颜色和透明度（25%） -->
+    <!-- specular="1"：高镜面反射 -->
+    <!-- shininess="1"：高光泽度 -->
+    <!-- reflectance="0.6"：较高反射率 -->
+    <material name="glass_door" rgba="0.75 0.85 0.9 0.25" specular="1" shininess="1" reflectance="0.6"/>
+
+    <!-- ========== 金属材质 ========== -->
+    <!-- 深色金属材质：用于门框、桌腿等结构件 -->
+    <!-- rgba="0.2 0.2 0.22 1"：深灰色金属颜色 -->
+    <!-- specular="0.9"：高镜面反射 -->
+    <!-- shininess="0.8"：高光泽度 -->
+    <!-- reflectance="0.4"：中等反射率 -->
+    <material name="metal_dark" rgba="0.2 0.2 0.22 1" specular="0.9" shininess="0.8" reflectance="0.4"/>
+    
+    <!-- 铬金属材质：用于门把手、咖啡机部件等亮面金属 -->
+    <!-- rgba="0.8 0.8 0.82 1"：亮银色金属颜色 -->
+    <!-- specular="1"：最高镜面反射 -->
+    <!-- shininess="0.9"：极高光泽度 -->
+    <!-- reflectance="0.6"：高反射率 -->
+    <material name="metal_chrome" rgba="0.8 0.8 0.82 1" specular="1" shininess="0.9" reflectance="0.6"/>
+
+    <!-- ========== 咖啡机材质 ========== -->
+    <!-- 灰色咖啡机材质：中性色调的咖啡机外壳 -->
+    <!-- rgba="0.5 0.5 0.52 1"：中灰色金属颜色 -->
+    <!-- specular="0.7"：中等镜面反射 -->
+    <!-- shininess="0.6"：中等光泽度 -->
+    <!-- reflectance="0.3"：中等反射率 -->
+    <material name="machine_gray" rgba="0.5 0.5 0.52 1" specular="0.7" shininess="0.6" reflectance="0.3"/>
+    
+    <!-- 白色咖啡机材质：现代风格的白色咖啡机 -->
+    <!-- rgba="0.9 0.9 0.92 1"：亮白色金属颜色 -->
+    <!-- specular="0.8"：较高镜面反射 -->
+    <!-- shininess="0.7"：较高光泽度 -->
+    <!-- reflectance="0.4"：中等反射率 -->
+    <material name="machine_white" rgba="0.9 0.9 0.92 1" specular="0.8" shininess="0.7" reflectance="0.4"/>
+    
+    <!-- 黑色咖啡机材质：专业风格的黑色咖啡机 -->
+    <!-- rgba="0.15 0.15 0.16 1"：深黑色金属颜色 -->
+    <!-- specular="0.8"：较高镜面反射 -->
+    <!-- shininess="0.7"：较高光泽度 -->
+    <!-- reflectance="0.35"：中等反射率 -->
+    <material name="machine_black" rgba="0.15 0.15 0.16 1" specular="0.8" shininess="0.7" reflectance="0.35"/>
+    
+    <!-- 棕色咖啡机材质：复古风格的棕色咖啡机 -->
+    <!-- rgba="0.4 0.3 0.25 1"：深棕色金属颜色 -->
+    <!-- specular="0.6"：中等镜面反射 -->
+    <!-- shininess="0.5"：中等光泽度 -->
+    <!-- reflectance="0.2"：较低反射率 -->
+    <material name="machine_brown" rgba="0.4 0.3 0.25 1" specular="0.6" shininess="0.5" reflectance="0.2"/>
+
+    <!-- ========== 木材材质 ========== -->
+    <!-- 深色木材材质：用于屋顶、吧台台面等深色木质结构 -->
+    <!-- rgba="0.3 0.2 0.15 1"：深棕色木材颜色 -->
+    <!-- specular="0.2"：低镜面反射，模拟木材的自然光泽 -->
+    <!-- shininess="0.2"：低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="wood_dark" rgba="0.3 0.2 0.15 1" specular="0.2" shininess="0.2" reflectance="0"/>
+    
+    <!-- 浅色木材材质：用于墙面、吧台侧面等浅色木质结构 -->
+    <!-- rgba="0.7 0.6 0.5 1"：浅棕色木材颜色 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="wood_light" rgba="0.7 0.6 0.5 1" specular="0.3" shininess="0.3" reflectance="0.05"/>
+    
+    <!-- 圆形木材材质：用于沙发扶手等圆形木质部件 -->
+    <!-- rgba="0.65 0.55 0.4 1"：中棕色木材颜色 -->
+    <!-- specular="0.25"：中等镜面反射 -->
+    <!-- shininess="0.25"：中等光泽度 -->
+    <!-- reflectance="0.03"：极低反射率 -->
+    <material name="wood_round" rgba="0.65 0.55 0.4 1" specular="0.25" shininess="0.25" reflectance="0.03"/>
+
+    <!-- ========== 布料材质 ========== -->
+    <!-- 红色布料材质：用于装饰性布料元素 -->
+    <!-- rgba="0.8 0.2 0.2 1"：鲜艳的红色 -->
+    <!-- specular="0.1"：低镜面反射，模拟布料质感 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_red" rgba="0.8 0.2 0.2 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 蓝色布料材质：用于装饰性布料元素 -->
+    <!-- rgba="0.2 0.4 0.7 1"：深蓝色 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_blue" rgba="0.2 0.4 0.7 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 米色布料材质：用于沙发座垫等中性色调布料 -->
+    <!-- rgba="0.9 0.85 0.75 1"：温暖的米色 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_beige" rgba="0.9 0.85 0.75 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 浅色布料材质：用于浅色布料元素 -->
+    <!-- rgba="0.95 0.93 0.9 1"：极浅的米白色 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_light" rgba="0.95 0.93 0.9 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 白色布料材质：用于纯白色布料元素 -->
+    <!-- rgba="1 1 1 1"：纯白色 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_white" rgba="1 1 1 1" specular="0.1" shininess="0.1"/>
+
+    <!-- ========== 草地材质 ========== -->
+    <!-- 草地纹理：使用棋盘格纹理模拟草地效果 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- builtin="checker"：内置棋盘格纹理 -->
+    <!-- rgb1="0.3 0.5 0.3"：深绿色草地颜色 -->
+    <!-- rgb2="0.28 0.48 0.28"：稍深的绿色，形成草地纹理 -->
+    <!-- width="512" height="512"：纹理分辨率 -->
+    <texture name="grass" type="2d" builtin="checker" rgb1="0.3 0.5 0.3" rgb2="0.28 0.48 0.28" width="512" height="512"/>
+    
+    <!-- 草地材质：应用草地纹理并设置材质属性 -->
+    <!-- texture="grass"：使用上面定义的草地纹理 -->
+    <!-- texrepeat="40 40"：纹理重复次数（40x40），形成细密的草地纹理 -->
+    <!-- specular="0.1"：极低镜面反射，模拟草地粗糙表面 -->
+    <!-- shininess="0.05"：极低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="grass_mat" texture="grass" texrepeat="40 40" specular="0.1" shininess="0.05" reflectance="0"/>
+
+    <!-- ========== 天空盒纹理 ========== -->
+    <!-- 天空盒纹理：用于环境背景的天空效果 -->
+    <!-- type="skybox"：天空盒类型纹理 -->
+    <!-- builtin="gradient"：内置渐变纹理 -->
+    <!-- rgb1="0.6 0.75 0.9"：天空顶部颜色（浅蓝色） -->
+    <!-- rgb2="0.3 0.5 0.7"：天空底部颜色（深蓝色） -->
+    <!-- width="512" height="512"：纹理分辨率 -->
+    <texture name="skybox" type="skybox" builtin="gradient" rgb1="0.6 0.75 0.9" rgb2="0.3 0.5 0.7" width="512" height="512"/>
+
+    <!-- ========== 菜单纹理 ========== -->
+    <!-- 菜单图片纹理1：从外部文件加载的菜单图片 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- file="menu1.png"：菜单图片文件路径 -->
+    <texture name="menu_texture_1" type="2d" file="menu1.png"/>
+    
+    <!-- 菜单材质1：应用菜单纹理并设置材质属性 -->
+    <!-- texture="menu_texture_1"：使用菜单纹理1 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="menu_mat_1" texture="menu_texture_1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 菜单图片纹理2：第二个菜单图片 -->
+    <!-- file="menu2.png"：菜单图片文件路径 -->
+    <texture name="menu_texture_2" type="2d" file="menu2.png"/>
+    
+    <!-- 菜单材质2：应用菜单纹理2 -->
+    <!-- texture="menu_texture_2"：使用菜单纹理2 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="menu_mat_2" texture="menu_texture_2" specular="0.1" shininess="0.1"/>
+    
+    <!-- 菜单图片纹理3：第三个菜单图片 -->
+    <!-- file="menu3.png"：菜单图片文件路径 -->
+    <texture name="menu_texture_3" type="2d" file="menu3.png"/>
+    
+    <!-- 菜单材质3：应用菜单纹理3 -->
+    <!-- texture="menu_texture_3"：使用菜单纹理3 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="menu_mat_3" texture="menu_texture_3" specular="0.1" shininess="0.1"/>
+
+
+
+  </asset>
+
+  <!-- 世界主体 -->
+  <worldbody>
+    <!-- 主光源（阳光 - 增强） -->
+    <light directional="true" diffuse="1.2 1.2 1.1" specular="0.6 0.6 0.5" pos="50 20 40" dir="-1 -0.7 -1.5" castshadow="true"/>
+
+    <!-- 辅助光源 - 增强 -->
+    <light directional="true" diffuse="0.5 0.55 0.6" specular="0.3 0.3 0.3" pos="20 -15 30" dir="0.7 0.5 -1" castshadow="false"/>
+
+    <!-- 室内顶部光源 -->
+    <light directional="false" diffuse="1.0 0.95 0.85" specular="0.4 0.4 0.3" pos="20 0 5.5" dir="0 0 -1" castshadow="false" cutoff="80"/>
+
+    <!-- 地面 -->
+    <geom name="ground" type="plane" size="50 50 0.1" material="grass_mat" condim="3" friction="1 0.5 0.005"/>
+
+    <!-- ========== 咖啡店主体建筑 ========== -->
+    <body name="cafe_building" pos="20 0 0"> <!-- 咖啡店主体建筑，位置坐标 (20, 0, 0) -->
+
+      <!-- 地板 -->
+      <geom name="cafe_floor" type="box" size="6 5 0.1" pos="0 0 0.1" material="wood_floor_mat"/> <!-- 木地板，尺寸12x10x0.2米，木地板材质 -->
+
+            <!-- 后墙（实墙） -->
+      <geom name="back_wall" type="box" size="6 0.15 3" pos="0 -5 3" material="wood_light"/> <!-- 后墙，尺寸12x0.3x6米，浅色木材材质 -->
+
+      <!-- 左侧墙（实墙） -->
+      <geom name="left_wall" type="box" size="0.15 5 3" pos="-6 0 3" material="wood_light"/> <!-- 左侧墙，尺寸0.3x10x6米，浅色木材材质 -->
+
+
+
+
+
+      <!-- 右侧墙（实墙） -->
+      <geom name="right_wall" type="box" size="0.15 5 3" pos="6 0 3" material="wood_light"/> <!-- 右侧墙，尺寸0.3x10x6米，浅色木材材质 -->
+
+
+
+
+      <!-- 前墙左侧（实墙部分） -->
+      <geom name="front_wall_left" type="box" size="1.5 0.15 3" pos="-4.5 5 3" material="wood_light"/> <!-- 前墙左侧实墙，尺寸3x0.3x6米，浅色木材材质 -->
+
+      <!-- 前墙右侧（实墙部分） -->
+      <geom name="front_wall_right" type="box" size="1.5 0.15 3" pos="4.5 5 3" material="wood_light"/> <!-- 前墙右侧实墙，尺寸3x0.3x6米，浅色木材材质 -->
+
+      <!-- 前墙顶部横梁 -->
+      <geom name="front_beam_top" type="box" size="3 0.15 0.4" pos="0 5 5.6" material="wood_light"/> <!-- 前墙顶部横梁，尺寸6x0.3x0.8米，浅色木材材质 -->
+
+      <!-- 大型透明玻璃窗 - 前面 -->
+      <geom name="front_glass_left" type="box" size="1.2 0.02 2.82" pos="-2 5 3" material="glass_clear"/> <!-- 前左侧玻璃窗，尺寸2.6x0.04x5米，透明玻璃材质 -->
+      <geom name="front_glass_right" type="box" size="1.2 0.02 2.82" pos="2 5 3" material="glass_clear"/> <!-- 前右侧玻璃窗，尺寸2.6x0.04x5米，透明玻璃材质 -->
+
+      <!-- 透明玻璃窗 - 左侧 -->
+      <geom name="left_glass_1" type="box" size="0.02 2 2" pos="-6 -2 3" material="glass_clear"/> <!-- 左侧玻璃窗1，尺寸0.04x4x4米，透明玻璃材质 -->
+      <geom name="left_glass_2" type="box" size="0.02 1.5 2" pos="-6 2 3" material="glass_clear"/> <!-- 左侧玻璃窗2，尺寸0.04x3x4米，透明玻璃材质 -->
+
+      <!-- 透明玻璃窗 - 右侧 -->
+      <geom name="right_glass_1" type="box" size="0.02 2 2" pos="6 -2 3" material="glass_clear"/> <!-- 右侧玻璃窗1，尺寸0.04x4x4米，透明玻璃材质 -->
+      <geom name="right_glass_2" type="box" size="0.02 1.5 2" pos="6 2 3" material="glass_clear"/> <!-- 右侧玻璃窗2，尺寸0.04x3x4米，透明玻璃材质 -->
+
+      <!-- 屋顶 -->
+      <geom name="roof" type="box" size="6.2 5.2 0.15" pos="0 0 6.15" material="wood_dark"/> <!-- 屋顶，尺寸12.4x10.4x0.3米，深色木材材质 -->
+
+      <!-- 门框 -->
+      <geom name="door_frame_left" type="box" size="0.08 0.08 2.6" pos="0.8 5 2.6" material="metal_dark"/> <!-- 门框左侧立柱，尺寸0.16x0.16x5米，深色金属材质 -->
+      <geom name="door_frame_right" type="box" size="0.08 0.08 2.6" pos="-0.8 5 2.6" material="metal_dark"/> <!-- 门框右侧立柱，尺寸0.16x0.16x5米，深色金属材质 -->
+      <geom name="door_frame_top" type="box" size="0.8 0.08 0.08" pos="0 5 5.13" material="metal_dark"/> <!-- 门框顶部横梁，尺寸1.6x0.16x0.16米，深色金属材质 -->
+
+    </body>
+
+    <!-- ========== 动态玻璃门（可开合） ========== -->
+    <body name="glass_door" pos="20 5 2.65"> <!-- 动态玻璃门主体，位置坐标 (0, 5, 2.5) -->
+      <joint name="door_hinge" type="hinge" pos="-0.7 0 0" axis="0 0 1" range="-5 90" damping="3" stiffness="5"/> <!-- 门铰链关节，位置(-0.7, 0, 0)，Z轴旋转，范围-5到90度，阻尼3，刚度5 -->
+      <geom name="door_glass" type="box" size="0.71 0.03 2.43" pos="0 0 0" material="glass_door"/> <!-- 玻璃门板，尺寸1.4x0.06x5米，半透明玻璃门材质 -->
+      <geom name="door_handle" type="cylinder" size="0.03 0.15" pos="0.6 0.08 0" quat="0.707 0.707 0 0" material="metal_chrome"/> <!-- 门把手，尺寸0.06x0.3米，位置(0.6, 0.08, 0)，旋转45度，铬金属材质 -->
+    </body>
+
+    <!-- ========== 吧台区域 ========== -->
+    <!-- 吧台后墙架子 -->
+    <body name="bar_shelves" pos="20 -3.5 0"> <!-- 吧台后墙架子主体，位置坐标 (0, -3.5, 0) -->
+      <geom name="back_shelf_1" type="box" size="4.0 0.40 0.03" pos="-0.5 -0.7 1.8" material="wood_dark"/> <!-- 下层架子，尺寸10x0.8x0.06米，深色木材材质 -->
+      <geom name="back_shelf_2" type="box" size="4.0 0.40 0.03" pos="-0.5 -0.7 2.5" material="wood_dark"/> <!-- 中层架子，尺寸10x0.8x0.06米，深色木材材质 -->
+      <geom name="back_shelf_3" type="box" size="4.0 0.40 0.03" pos="-0.5 -0.7 3.2" material="wood_dark"/> <!-- 上层架子，尺寸10x0.8x0.06米，深色木材材质 -->
+    </body>
+
+    <!-- 架子前面的大吧台 -->
+    <body name="bar_counter" pos="19.5 -2.2 0"> <!-- 吧台主体，位置坐标 (19.5, -2.2, 0) -->
+      <!-- 吧台主体 -->
+      <geom name="counter_top" type="box" size="4.5 0.6 0.05" pos="0 0 1.1" material="wood_dark"/> <!-- 吧台台面，尺寸9x1.2x0.1米，深色木材材质 -->
+      <geom name="counter_front" type="box" size="4.5 0.6 0.55" pos="0 0 0.55" material="wood_light"/>
+      <geom name="counter_back" type="box" size="4.5 0.6 0.55" pos="0 -0.6 0.55" material="wood_light"/>
+
+      <!-- 咖啡机1（意式咖啡机 - 最左侧,黑色） -->
+      <geom name="coffee_machine_1_base" type="box" size="0.28 0.22 0.18" pos="-2.8 0 1.25" material="machine_black"/> <!-- 咖啡机1底座，尺寸0.56x0.44x0.36米，黑色机器材质 -->
+      <geom name="coffee_machine_1_body" type="box" size="0.25 0.2 0.28" pos="-2.8 0 1.52" material="machine_black"/> <!-- 咖啡机1主体，尺寸0.5x0.4x0.56米，黑色机器材质 -->
+      <geom name="coffee_machine_1_top" type="box" size="0.22 0.18 0.08" pos="-2.8 0 1.85" material="machine_black"/> <!-- 咖啡机1顶部，尺寸0.44x0.36x0.16米，黑色机器材质 -->
+      <geom name="coffee_machine_1_group_head_l" type="cylinder" size="0.05 0.1" pos="-2.95 0 1.92" material="metal_chrome"/> <!-- 咖啡机1左侧冲煮头，直径0.1x0.2米，铬金属材质 -->
+      <geom name="coffee_machine_1_group_head_r" type="cylinder" size="0.05 0.1" pos="-2.65 0 1.92" material="metal_chrome"/> <!-- 咖啡机1右侧冲煮头，直径0.1x0.2米，铬金属材质 -->
+      <geom name="coffee_machine_1_steam_wand" type="cylinder" size="0.012 0.12" pos="-2.5 0 1.88" quat="0.707 0 0.707 0" material="metal_chrome"/> <!-- 咖啡机1蒸汽棒，尺寸0.024x0.24米，旋转90度，铬金属材质 -->
+
+      <!-- 咖啡机2（单头咖啡机,灰色） -->
+      <geom name="coffee_machine_2_base" type="box" size="0.22 0.18 0.16" pos="-2.1 0 1.23" material="machine_gray"/> <!-- 咖啡机2底座，尺寸0.44x0.36x0.32米，灰色机器材质 -->
+      <geom name="coffee_machine_2_body" type="box" size="0.2 0.16 0.24" pos="-2.1 0 1.49" material="machine_gray"/> <!-- 咖啡机2主体，尺寸0.4x0.32x0.48米，灰色机器材质 -->
+      <geom name="coffee_machine_2_top" type="box" size="0.18 0.14 0.06" pos="-2.1 0 1.78" material="machine_gray"/> <!-- 咖啡机2顶部，尺寸0.36x0.28x0.12米，灰色机器材质 -->
+      <geom name="coffee_machine_2_group_head" type="cylinder" size="0.05 0.1" pos="-2.1 0 1.85" material="metal_chrome"/> <!-- 咖啡机2冲煮头，直径0.1x0.2米，铬金属材质 -->
+      <geom name="coffee_machine_2_steam_wand" type="cylinder" size="0.012 0.1" pos="-1.95 0 1.82" quat="0.707 0 0.707 0" material="metal_chrome"/> <!-- 咖啡机2蒸汽棒，尺寸0.024x0.2米，旋转90度，铬金属材质 -->
+
+      <!-- 咖啡机3（小型咖啡机,白色） -->
+      <geom name="coffee_machine_3_base" type="box" size="0.2 0.16 0.14" pos="-1.4 0 1.21" material="machine_white"/> <!-- 咖啡机3底座，尺寸0.4x0.32x0.28米，白色机器材质 -->
+      <geom name="coffee_machine_3_body" type="box" size="0.18 0.14 0.22" pos="-1.4 0 1.46" material="machine_white"/> <!-- 咖啡机3主体，尺寸0.36x0.28x0.44米，白色机器材质 -->
+      <geom name="coffee_machine_3_top" type="box" size="0.16 0.12 0.05" pos="-1.4 0 1.73" material="machine_white"/> <!-- 咖啡机3顶部，尺寸0.32x0.24x0.1米，白色机器材质 -->
+      <geom name="coffee_machine_3_group_head" type="cylinder" size="0.04 0.08" pos="-1.4 0 1.78" material="metal_chrome"/> <!-- 咖啡机3冲煮头，直径0.08x0.16米，铬金属材质 -->
+      <geom name="coffee_machine_3_steam_wand" type="cylinder" size="0.01 0.08" pos="-1.25 0 1.75" quat="0.707 0 0.707 0" material="metal_chrome"/> <!-- 咖啡机3蒸汽棒，尺寸0.02x0.16米，旋转90度，铬金属材质 -->
+
+      <!-- 咖啡机4（紧凑型咖啡机,棕色） -->
+      <geom name="coffee_machine_4_base" type="box" size="0.24 0.2 0.17" pos="-0.7 0 1.24" material="machine_brown"/> <!-- 咖啡机4底座，尺寸0.48x0.4x0.34米，棕色机器材质 -->
+      <geom name="coffee_machine_4_body" type="box" size="0.22 0.18 0.26" pos="-0.7 0 1.51" material="machine_brown"/> <!-- 咖啡机4主体，尺寸0.44x0.36x0.52米，棕色机器材质 -->
+      <geom name="coffee_machine_4_top" type="box" size="0.2 0.16 0.07" pos="-0.7 0 1.82" material="machine_brown"/> <!-- 咖啡机4顶部，尺寸0.4x0.32x0.14米，棕色机器材质 -->
+      <geom name="coffee_machine_4_group_head" type="cylinder" size="0.05 0.1" pos="-0.7 0 1.89" material="metal_chrome"/> <!-- 咖啡机4冲煮头，直径0.1x0.2米，铬金属材质 -->
+      <geom name="coffee_machine_4_steam_wand" type="cylinder" size="0.012 0.11" pos="-0.55 0 1.86" quat="0.707 0 0.707 0" material="metal_chrome"/> <!-- 咖啡机4蒸汽棒，尺寸0.024x0.22米，旋转90度，铬金属材质 -->
+
+      <!-- 咖啡机5（紧凑型咖啡机,灰色） -->
+      <geom name="coffee_machine_5_base" type="box" size="0.22 0.18 0.16" pos="0.0 0 1.23" material="machine_gray"/>
+      <geom name="coffee_machine_5_body" type="box" size="0.2 0.16 0.24" pos="0.0 0 1.49" material="machine_gray"/>
+      <geom name="coffee_machine_5_top" type="box" size="0.18 0.14 0.06" pos="0.0 0 1.78" material="machine_gray"/>
+      <geom name="coffee_machine_5_group_head" type="cylinder" size="0.05 0.1" pos="0.0 0 1.85" material="metal_chrome"/>
+      <geom name="coffee_machine_5_steam_wand" type="cylinder" size="0.012 0.1" pos="0.15 0 1.82" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机6（小型咖啡机,白色） -->
+      <geom name="coffee_machine_6_base" type="box" size="0.2 0.16 0.14" pos="0.7 0 1.21" material="machine_white"/>
+      <geom name="coffee_machine_6_body" type="box" size="0.18 0.14 0.22" pos="0.7 0 1.46" material="machine_white"/>
+      <geom name="coffee_machine_6_top" type="box" size="0.16 0.12 0.05" pos="0.7 0 1.73" material="machine_white"/>
+      <geom name="coffee_machine_6_group_head" type="cylinder" size="0.04 0.08" pos="0.7 0 1.78" material="metal_chrome"/>
+      <geom name="coffee_machine_6_steam_wand" type="cylinder" size="0.01 0.08" pos="0.85 0 1.75" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机7（紧凑型咖啡机,黑色） -->
+      <geom name="coffee_machine_7_base" type="box" size="0.24 0.2 0.17" pos="1.4 0 1.24" material="machine_black"/>
+      <geom name="coffee_machine_7_body" type="box" size="0.22 0.18 0.26" pos="1.4 0 1.51" material="machine_black"/>
+      <geom name="coffee_machine_7_top" type="box" size="0.2 0.16 0.07" pos="1.4 0 1.82" material="machine_black"/>
+      <geom name="coffee_machine_7_group_head" type="cylinder" size="0.05 0.1" pos="1.4 0 1.89" material="metal_chrome"/>
+      <geom name="coffee_machine_7_steam_wand" type="cylinder" size="0.012 0.11" pos="1.55 0 1.86" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机8（单头咖啡机,棕色） -->
+      <geom name="coffee_machine_8_base" type="box" size="0.22 0.18 0.16" pos="2.1 0 1.23" material="machine_brown"/>
+      <geom name="coffee_machine_8_body" type="box" size="0.2 0.16 0.24" pos="2.1 0 1.49" material="machine_brown"/>
+      <geom name="coffee_machine_8_top" type="box" size="0.18 0.14 0.06" pos="2.1 0 1.78" material="machine_brown"/>
+      <geom name="coffee_machine_8_group_head" type="cylinder" size="0.05 0.1" pos="2.1 0 1.85" material="metal_chrome"/>
+      <geom name="coffee_machine_8_steam_wand" type="cylinder" size="0.012 0.1" pos="2.25 0 1.82" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机9（超小型咖啡机,白色） -->
+      <geom name="coffee_machine_9_base" type="box" size="0.18 0.14 0.12" pos="-2.45 0 1.19" material="machine_white"/>
+      <geom name="coffee_machine_9_body" type="box" size="0.16 0.12 0.18" pos="-2.45 0 1.4" material="machine_white"/>
+      <geom name="coffee_machine_9_top" type="box" size="0.14 0.1 0.04" pos="-2.45 0 1.63" material="machine_white"/>
+      <geom name="coffee_machine_9_group_head" type="cylinder" size="0.035 0.07" pos="-2.45 0 1.67" material="metal_chrome"/>
+
+      <!-- 咖啡机10（宽型咖啡机,黑色） -->
+      <geom name="coffee_machine_10_base" type="box" size="0.32 0.24 0.19" pos="-1.05 0 1.26" material="machine_black"/>
+      <geom name="coffee_machine_10_body" type="box" size="0.3 0.22 0.3" pos="-1.05 0 1.56" material="machine_black"/>
+      <geom name="coffee_machine_10_top" type="box" size="0.28 0.2 0.08" pos="-1.05 0 1.91" material="machine_black"/>
+      <geom name="coffee_machine_10_group_head" type="cylinder" size="0.06 0.12" pos="-1.05 0 1.99" material="metal_chrome"/>
+      <geom name="coffee_machine_10_steam_wand" type="cylinder" size="0.014 0.13" pos="-0.85 0 1.95" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机11（高型咖啡机,灰色） -->
+      <geom name="coffee_machine_11_base" type="box" size="0.2 0.16 0.15" pos="-0.35 0 1.22" material="machine_gray"/>
+      <geom name="coffee_machine_11_body" type="box" size="0.18 0.14 0.32" pos="-0.35 0 1.56" material="machine_gray"/>
+      <geom name="coffee_machine_11_top" type="box" size="0.16 0.12 0.06" pos="-0.35 0 1.89" material="machine_gray"/>
+      <geom name="coffee_machine_11_group_head" type="cylinder" size="0.045 0.09" pos="-0.35 0 1.96" material="metal_chrome"/>
+      <geom name="coffee_machine_11_steam_wand" type="cylinder" size="0.011 0.09" pos="-0.20 0 1.93" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机12（超小型咖啡机,棕色） -->
+      <geom name="coffee_machine_12_base" type="box" size="0.18 0.14 0.12" pos="0.35 0 1.19" material="machine_brown"/>
+      <geom name="coffee_machine_12_body" type="box" size="0.16 0.12 0.18" pos="0.35 0 1.4" material="machine_brown"/>
+      <geom name="coffee_machine_12_top" type="box" size="0.14 0.1 0.04" pos="0.35 0 1.63" material="machine_brown"/>
+      <geom name="coffee_machine_12_group_head" type="cylinder" size="0.035 0.07" pos="0.35 0 1.67" material="metal_chrome"/>
+
+      <!-- 咖啡机13（宽型咖啡机,白色） -->
+      <geom name="coffee_machine_13_base" type="box" size="0.32 0.24 0.19" pos="1.05 0 1.26" material="machine_white"/>
+      <geom name="coffee_machine_13_body" type="box" size="0.3 0.22 0.3" pos="1.05 0 1.56" material="machine_white"/>
+      <geom name="coffee_machine_13_top" type="box" size="0.28 0.2 0.08" pos="1.05 0 1.91" material="machine_white"/>
+      <geom name="coffee_machine_13_group_head" type="cylinder" size="0.06 0.12" pos="1.05 0 1.99" material="metal_chrome"/>
+      <geom name="coffee_machine_13_steam_wand" type="cylinder" size="0.014 0.13" pos="1.25 0 1.95" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机14（超小型咖啡机,黑色） -->
+      <geom name="coffee_machine_14_base" type="box" size="0.18 0.14 0.12" pos="1.75 0 1.19" material="machine_black"/>
+      <geom name="coffee_machine_14_body" type="box" size="0.16 0.12 0.18" pos="1.75 0 1.4" material="machine_black"/>
+      <geom name="coffee_machine_14_top" type="box" size="0.14 0.1 0.04" pos="1.75 0 1.63" material="machine_black"/>
+      <geom name="coffee_machine_14_group_head" type="cylinder" size="0.035 0.07" pos="1.75 0 1.67" material="metal_chrome"/>
+
+      <!-- 咖啡机15（高型咖啡机,灰色） -->
+      <geom name="coffee_machine_15_base" type="box" size="0.2 0.16 0.15" pos="2.45 0 1.22" material="machine_gray"/>
+      <geom name="coffee_machine_15_body" type="box" size="0.18 0.14 0.32" pos="2.45 0 1.56" material="machine_gray"/>
+      <geom name="coffee_machine_15_top" type="box" size="0.16 0.12 0.06" pos="2.45 0 1.89" material="machine_gray"/>
+      <geom name="coffee_machine_15_group_head" type="cylinder" size="0.045 0.09" pos="2.45 0 1.96" material="metal_chrome"/>
+      <geom name="coffee_machine_15_steam_wand" type="cylinder" size="0.011 0.09" pos="2.60 0 1.93" quat="0.707 0 0.707 0" material="metal_chrome"/>
+
+      <!-- 咖啡机16（超小型咖啡机 - 最右侧,白色） -->
+      <geom name="coffee_machine_16_base" type="box" size="0.18 0.14 0.12" pos="2.8 0 1.19" material="machine_white"/>
+      <geom name="coffee_machine_16_body" type="box" size="0.16 0.12 0.18" pos="2.8 0 1.4" material="machine_white"/>
+      <geom name="coffee_machine_16_top" type="box" size="0.14 0.1 0.04" pos="2.8 0 1.63" material="machine_white"/>
+      <geom name="coffee_machine_16_group_head" type="cylinder" size="0.035 0.07" pos="2.8 0 1.67" material="metal_chrome"/>
+
+      <!-- 咖啡杯（放在吧台上） -->
+      <geom name="cup_1" type="cylinder" size="0.04 0.08" pos="-0.5 0 1.23" material="fabric_beige"/>
+      <geom name="cup_2" type="cylinder" size="0.04 0.08" pos="-0.2 0 1.23" material="fabric_beige"/>
+      <geom name="cup_3" type="cylinder" size="0.04 0.08" pos="0.1 0 1.23" material="fabric_beige"/>
+
+     <!-- 架子上的果汁瓶子 - 第1层（修复悬空，整体上移0.08） -->
+<!-- 架子1表面在z=1.83，瓶子整体上移使底部接触架子 -->
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_1_base" type="cylinder" size="0.055 0.04" pos="-3.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_1_body" type="cylinder" size="0.05 0.15" pos="-3.5 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_1_neck" type="cylinder" size="0.025 0.05" pos="-3.5 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_1_liquid" type="cylinder" size="0.045 0.13" pos="-3.5 -1.75 2.00" rgba="0.9 0.5 0.1 0.7"/>
+
+<!-- 方形瓶子1 -->
+<geom name="juice_bottle_sq1_base" type="box" size="0.05 0.05 0.04" pos="-3.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq1_body" type="box" size="0.045 0.045 0.15" pos="-3.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_sq1_neck" type="box" size="0.02 0.02 0.05" pos="-3.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq1_liquid" type="box" size="0.04 0.04 0.13" pos="-3.0 -1.75 2.00" rgba="0.8 0.9 0.3 0.7"/>
+
+<!-- 圆形瓶子2 -->
+<geom name="juice_bottle_2_base" type="cylinder" size="0.055 0.04" pos="-2.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_2_body" type="cylinder" size="0.05 0.15" pos="-2.5 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_2_neck" type="cylinder" size="0.025 0.05" pos="-2.5 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_2_liquid" type="cylinder" size="0.045 0.13" pos="-2.5 -1.75 2.00" rgba="0.6 0.2 0.5 0.7"/>
+
+<!-- 高瘦圆形瓶子 -->
+<geom name="juice_bottle_tall1_base" type="cylinder" size="0.045 0.04" pos="-2.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_tall1_body" type="cylinder" size="0.04 0.18" pos="-2.0 -1.75 2.05" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_tall1_neck" type="cylinder" size="0.02 0.06" pos="-2.0 -1.75 2.29" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_tall1_liquid" type="cylinder" size="0.035 0.16" pos="-2.0 -1.75 2.03" rgba="0.95 0.9 0.3 0.7"/>
+
+<!-- 方形瓶子2 -->
+<geom name="juice_bottle_sq2_base" type="box" size="0.05 0.05 0.04" pos="-1.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq2_body" type="box" size="0.045 0.045 0.15" pos="-1.5 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_sq2_neck" type="box" size="0.02 0.02 0.05" pos="-1.5 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq2_liquid" type="box" size="0.04 0.04 0.13" pos="-1.5 -1.75 2.00" rgba="0.9 0.3 0.4 0.7"/>
+
+<!-- 圆形瓶子3 -->
+<geom name="juice_bottle_3_base" type="cylinder" size="0.055 0.04" pos="-1.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_3_body" type="cylinder" size="0.05 0.15" pos="-1.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_3_neck" type="cylinder" size="0.025 0.05" pos="-1.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_3_liquid" type="cylinder" size="0.045 0.13" pos="-1.0 -1.75 2.00" rgba="0.4 0.7 0.5 0.7"/>
+
+<!-- 宽圆形瓶子 -->
+<geom name="juice_bottle_wide1_base" type="cylinder" size="0.065 0.04" pos="-0.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_wide1_body" type="cylinder" size="0.06 0.12" pos="-0.5 -1.75 1.99" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_wide1_neck" type="cylinder" size="0.025 0.05" pos="-0.5 -1.75 2.17" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_wide1_liquid" type="cylinder" size="0.055 0.10" pos="-0.5 -1.75 1.97" rgba="0.6 0.8 0.4 0.7"/>
+
+<!-- 圆形瓶子4 -->
+<geom name="juice_bottle_4_base" type="cylinder" size="0.055 0.04" pos="0.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_4_body" type="cylinder" size="0.05 0.15" pos="0.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_4_neck" type="cylinder" size="0.025 0.05" pos="0.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_4_liquid" type="cylinder" size="0.045 0.13" pos="0.0 -1.75 2.00" rgba="0.5 0.5 0.7 0.7"/>
+
+<!-- 方形瓶子3 -->
+<geom name="juice_bottle_sq3_base" type="box" size="0.05 0.05 0.04" pos="0.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq3_body" type="box" size="0.045 0.045 0.15" pos="0.5 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_sq3_neck" type="box" size="0.02 0.02 0.05" pos="0.5 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq3_liquid" type="box" size="0.04 0.04 0.13" pos="0.5 -1.75 2.00" rgba="0.7 0.4 0.6 0.7"/>
+
+<!-- 圆形瓶子5 -->
+<geom name="juice_bottle_5_base" type="cylinder" size="0.055 0.04" pos="1.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_5_body" type="cylinder" size="0.05 0.15" pos="1.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_5_neck" type="cylinder" size="0.025 0.05" pos="1.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_5_liquid" type="cylinder" size="0.045 0.13" pos="1.0 -1.75 2.00" rgba="0.8 0.5 0.3 0.7"/>
+
+<!-- 高瘦圆形瓶子2 -->
+<geom name="juice_bottle_tall2_base" type="cylinder" size="0.045 0.04" pos="1.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_tall2_body" type="cylinder" size="0.04 0.18" pos="1.5 -1.75 2.05" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_tall2_neck" type="cylinder" size="0.02 0.06" pos="1.5 -1.75 2.29" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_tall2_liquid" type="cylinder" size="0.035 0.16" pos="1.5 -1.75 2.03" rgba="0.9 0.4 0.5 0.7"/>
+
+<!-- 圆形瓶子6 -->
+<geom name="juice_bottle_6_base" type="cylinder" size="0.055 0.04" pos="2.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_6_body" type="cylinder" size="0.05 0.15" pos="2.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_6_neck" type="cylinder" size="0.025 0.05" pos="2.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_6_liquid" type="cylinder" size="0.045 0.13" pos="2.0 -1.75 2.00" rgba="0.7 0.6 0.3 0.7"/>
+
+<!-- 方形瓶子4 -->
+<geom name="juice_bottle_sq4_base" type="box" size="0.05 0.05 0.04" pos="2.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq4_body" type="box" size="0.045 0.045 0.15" pos="2.5 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_sq4_neck" type="box" size="0.02 0.02 0.05" pos="2.5 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_sq4_liquid" type="box" size="0.04 0.04 0.13" pos="2.5 -1.75 2.00" rgba="0.6 0.5 0.4 0.7"/>
+
+<!-- 圆形瓶子7 -->
+<geom name="juice_bottle_7_base" type="cylinder" size="0.055 0.04" pos="3.0 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_7_body" type="cylinder" size="0.05 0.15" pos="3.0 -1.75 2.02" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_7_neck" type="cylinder" size="0.025 0.05" pos="3.0 -1.75 2.22" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_7_liquid" type="cylinder" size="0.045 0.13" pos="3.0 -1.75 2.00" rgba="0.5 0.4 0.5 0.7"/>
+
+<!-- 宽圆形瓶子2 -->
+<geom name="juice_bottle_wide2_base" type="cylinder" size="0.065 0.04" pos="3.5 -1.75 1.87" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_wide2_body" type="cylinder" size="0.06 0.12" pos="3.5 -1.75 1.99" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_wide2_neck" type="cylinder" size="0.025 0.05" pos="3.5 -1.75 2.17" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_wide2_liquid" type="cylinder" size="0.055 0.10" pos="3.5 -1.75 1.97" rgba="0.4 0.5 0.6 0.7"/>
+
+      <!-- 架子上的果汁瓶子 - 第2层（修复悬空，添加不同形状） -->
+      <!-- 架子2表面在z=2.53，瓶子底部应放在此高度 -->
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_1_base" type="cylinder" size="0.055 0.04" pos="-3.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_1_body" type="cylinder" size="0.05 0.15" pos="-3.5 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_1_neck" type="cylinder" size="0.025 0.05" pos="-3.5 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_1_liquid" type="cylinder" size="0.045 0.13" pos="-3.5 -1.75 2.7" rgba="0.3 0.2 0.6 0.7"/>
+
+      <!-- 方形瓶子 -->
+      <geom name="juice_bottle_l2_sq1_base" type="box" size="0.05 0.05 0.04" pos="-3.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq1_body" type="box" size="0.045 0.045 0.15" pos="-3.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_sq1_neck" type="box" size="0.02 0.02 0.05" pos="-3.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq1_liquid" type="box" size="0.04 0.04 0.13" pos="-3.0 -1.75 2.7" rgba="0.9 0.6 0.2 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_2_base" type="cylinder" size="0.055 0.04" pos="-2.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_2_body" type="cylinder" size="0.05 0.15" pos="-2.5 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_2_neck" type="cylinder" size="0.025 0.05" pos="-2.5 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_2_liquid" type="cylinder" size="0.045 0.13" pos="-2.5 -1.75 2.7" rgba="0.9 0.2 0.2 0.7"/>
+
+      <!-- 高瘦圆形瓶子 -->
+      <geom name="juice_bottle_l2_tall1_base" type="cylinder" size="0.045 0.04" pos="-2.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_tall1_body" type="cylinder" size="0.04 0.18" pos="-2.0 -1.75 2.75" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_tall1_neck" type="cylinder" size="0.02 0.06" pos="-2.0 -1.75 2.99" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_tall1_liquid" type="cylinder" size="0.035 0.16" pos="-2.0 -1.75 2.73" rgba="0.95 0.85 0.3 0.7"/>
+
+      <!-- 方形瓶子 -->
+      <geom name="juice_bottle_l2_sq2_base" type="box" size="0.05 0.05 0.04" pos="-1.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq2_body" type="box" size="0.045 0.045 0.15" pos="-1.5 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_sq2_neck" type="box" size="0.02 0.02 0.05" pos="-1.5 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq2_liquid" type="box" size="0.04 0.04 0.13" pos="-1.5 -1.75 2.7" rgba="0.95 0.7 0.6 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_3_base" type="cylinder" size="0.055 0.04" pos="-1.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_3_body" type="cylinder" size="0.05 0.15" pos="-1.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_3_neck" type="cylinder" size="0.025 0.05" pos="-1.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_3_liquid" type="cylinder" size="0.045 0.13" pos="-1.0 -1.75 2.7" rgba="0.8 0.5 0.3 0.7"/>
+
+      <!-- 宽圆形瓶子 -->
+      <geom name="juice_bottle_l2_wide1_base" type="cylinder" size="0.065 0.04" pos="-0.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_wide1_body" type="cylinder" size="0.06 0.12" pos="-0.5 -1.75 2.69" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_wide1_neck" type="cylinder" size="0.025 0.05" pos="-0.5 -1.75 2.87" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_wide1_liquid" type="cylinder" size="0.055 0.10" pos="-0.5 -1.75 2.67" rgba="0.9 0.4 0.5 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_4_base" type="cylinder" size="0.055 0.04" pos="0.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_4_body" type="cylinder" size="0.05 0.15" pos="0.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_4_neck" type="cylinder" size="0.025 0.05" pos="0.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_4_liquid" type="cylinder" size="0.045 0.13" pos="0.0 -1.75 2.7" rgba="0.7 0.6 0.3 0.7"/>
+
+      <!-- 方形瓶子 -->
+      <geom name="juice_bottle_l2_sq3_base" type="box" size="0.05 0.05 0.04" pos="0.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq3_body" type="box" size="0.045 0.045 0.15" pos="0.5 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_sq3_neck" type="box" size="0.02 0.02 0.05" pos="0.5 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq3_liquid" type="box" size="0.04 0.04 0.13" pos="0.5 -1.75 2.7" rgba="0.6 0.5 0.4 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_5_base" type="cylinder" size="0.055 0.04" pos="1.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_5_body" type="cylinder" size="0.05 0.15" pos="1.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_5_neck" type="cylinder" size="0.025 0.05" pos="1.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_5_liquid" type="cylinder" size="0.045 0.13" pos="1.0 -1.75 2.7" rgba="0.5 0.4 0.5 0.7"/>
+
+      <!-- 高瘦圆形瓶子 -->
+      <geom name="juice_bottle_l2_tall2_base" type="cylinder" size="0.045 0.04" pos="1.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_tall2_body" type="cylinder" size="0.04 0.18" pos="1.5 -1.75 2.75" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_tall2_neck" type="cylinder" size="0.02 0.06" pos="1.5 -1.75 2.99" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_tall2_liquid" type="cylinder" size="0.035 0.16" pos="1.5 -1.75 2.73" rgba="0.4 0.5 0.6 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_6_base" type="cylinder" size="0.055 0.04" pos="2.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_6_body" type="cylinder" size="0.05 0.15" pos="2.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_6_neck" type="cylinder" size="0.025 0.05" pos="2.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_6_liquid" type="cylinder" size="0.045 0.13" pos="2.0 -1.75 2.7" rgba="0.3 0.5 0.6 0.7"/>
+
+      <!-- 方形瓶子 -->
+      <geom name="juice_bottle_l2_sq4_base" type="box" size="0.05 0.05 0.04" pos="2.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq4_body" type="box" size="0.045 0.045 0.15" pos="2.5 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_sq4_neck" type="box" size="0.02 0.02 0.05" pos="2.5 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_sq4_liquid" type="box" size="0.04 0.04 0.13" pos="2.5 -1.75 2.7" rgba="0.2 0.4 0.5 0.7"/>
+
+      <!-- 圆形瓶子 -->
+      <geom name="juice_bottle_l2_7_base" type="cylinder" size="0.055 0.04" pos="3.0 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_7_body" type="cylinder" size="0.05 0.15" pos="3.0 -1.75 2.72" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_7_neck" type="cylinder" size="0.025 0.05" pos="3.0 -1.75 2.92" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_7_liquid" type="cylinder" size="0.045 0.13" pos="3.0 -1.75 2.7" rgba="0.1 0.3 0.4 0.7"/>
+
+      <!-- 宽圆形瓶子 -->
+      <geom name="juice_bottle_l2_wide2_base" type="cylinder" size="0.065 0.04" pos="3.5 -1.75 2.57" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_wide2_body" type="cylinder" size="0.06 0.12" pos="3.5 -1.75 2.69" rgba="0.8 0.85 0.9 0.2"/>
+      <geom name="juice_bottle_l2_wide2_neck" type="cylinder" size="0.025 0.05" pos="3.5 -1.75 2.87" rgba="0.85 0.9 0.95 0.25"/>
+      <geom name="juice_bottle_l2_wide2_liquid" type="cylinder" size="0.055 0.10" pos="3.5 -1.75 2.67" rgba="0.05 0.2 0.3 0.7"/>
+
+      <!-- 架子上的果汁瓶子 - 第3层（修复悬空，调整底部高度） -->
+<!-- 架子3表面在z=3.23，瓶子底部应放在此高度 -->
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_1_base" type="cylinder" size="0.055 0.04" pos="-3.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_1_body" type="cylinder" size="0.05 0.15" pos="-3.5 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_1_neck" type="cylinder" size="0.025 0.05" pos="-3.5 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_1_liquid" type="cylinder" size="0.045 0.13" pos="-3.5 -1.75 3.36" rgba="0.8 0.4 0.3 0.7"/>
+
+<!-- 方形瓶子 -->
+<geom name="juice_bottle_l3_sq1_base" type="box" size="0.05 0.05 0.04" pos="-3.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq1_body" type="box" size="0.045 0.045 0.15" pos="-3.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_sq1_neck" type="box" size="0.02 0.02 0.05" pos="-3.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq1_liquid" type="box" size="0.04 0.04 0.13" pos="-3.0 -1.75 3.36" rgba="0.7 0.5 0.4 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_2_base" type="cylinder" size="0.055 0.04" pos="-2.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_2_body" type="cylinder" size="0.05 0.15" pos="-2.5 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_2_neck" type="cylinder" size="0.025 0.05" pos="-2.5 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_2_liquid" type="cylinder" size="0.045 0.13" pos="-2.5 -1.75 3.36" rgba="0.6 0.7 0.3 0.7"/>
+
+<!-- 高瘦圆形瓶子 -->
+<geom name="juice_bottle_l3_tall1_base" type="cylinder" size="0.045 0.04" pos="-2.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_tall1_body" type="cylinder" size="0.04 0.18" pos="-2.0 -1.75 3.41" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_tall1_neck" type="cylinder" size="0.02 0.06" pos="-2.0 -1.75 3.65" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_tall1_liquid" type="cylinder" size="0.035 0.16" pos="-2.0 -1.75 3.39" rgba="0.5 0.6 0.4 0.7"/>
+
+<!-- 方形瓶子 -->
+<geom name="juice_bottle_l3_sq2_base" type="box" size="0.05 0.05 0.04" pos="-1.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq2_body" type="box" size="0.045 0.045 0.15" pos="-1.5 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_sq2_neck" type="box" size="0.02 0.02 0.05" pos="-1.5 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq2_liquid" type="box" size="0.04 0.04 0.13" pos="-1.5 -1.75 3.36" rgba="0.4 0.5 0.5 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_3_base" type="cylinder" size="0.055 0.04" pos="-1.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_3_body" type="cylinder" size="0.05 0.15" pos="-1.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_3_neck" type="cylinder" size="0.025 0.05" pos="-1.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_3_liquid" type="cylinder" size="0.045 0.13" pos="-1.0 -1.75 3.36" rgba="0.3 0.4 0.5 0.7"/>
+
+<!-- 宽圆形瓶子 -->
+<geom name="juice_bottle_l3_wide1_base" type="cylinder" size="0.065 0.04" pos="-0.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_wide1_body" type="cylinder" size="0.06 0.12" pos="-0.5 -1.75 3.35" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_wide1_neck" type="cylinder" size="0.025 0.05" pos="-0.5 -1.75 3.53" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_wide1_liquid" type="cylinder" size="0.055 0.10" pos="-0.5 -1.75 3.33" rgba="0.2 0.3 0.4 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_4_base" type="cylinder" size="0.055 0.04" pos="0.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_4_body" type="cylinder" size="0.05 0.15" pos="0.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_4_neck" type="cylinder" size="0.025 0.05" pos="0.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_4_liquid" type="cylinder" size="0.045 0.13" pos="0.0 -1.75 3.36" rgba="0.1 0.2 0.3 0.7"/>
+
+<!-- 方形瓶子 -->
+<geom name="juice_bottle_l3_sq3_base" type="box" size="0.05 0.05 0.04" pos="0.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq3_body" type="box" size="0.045 0.045 0.15" pos="0.5 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_sq3_neck" type="box" size="0.02 0.02 0.05" pos="0.5 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq3_liquid" type="box" size="0.04 0.04 0.13" pos="0.5 -1.75 3.36" rgba="0.05 0.15 0.25 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_5_base" type="cylinder" size="0.055 0.04" pos="1.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_5_body" type="cylinder" size="0.05 0.15" pos="1.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_5_neck" type="cylinder" size="0.025 0.05" pos="1.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_5_liquid" type="cylinder" size="0.045 0.13" pos="1.0 -1.75 3.36" rgba="0.8 0.3 0.2 0.7"/>
+
+<!-- 高瘦圆形瓶子 -->
+<geom name="juice_bottle_l3_tall2_base" type="cylinder" size="0.045 0.04" pos="1.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_tall2_body" type="cylinder" size="0.04 0.18" pos="1.5 -1.75 3.41" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_tall2_neck" type="cylinder" size="0.02 0.06" pos="1.5 -1.75 3.65" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_tall2_liquid" type="cylinder" size="0.035 0.16" pos="1.5 -1.75 3.39" rgba="0.7 0.2 0.1 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_6_base" type="cylinder" size="0.055 0.04" pos="2.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_6_body" type="cylinder" size="0.05 0.15" pos="2.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_6_neck" type="cylinder" size="0.025 0.05" pos="2.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_6_liquid" type="cylinder" size="0.045 0.13" pos="2.0 -1.75 3.36" rgba="0.6 0.1 0.05 0.7"/>
+
+<!-- 方形瓶子 -->
+<geom name="juice_bottle_l3_sq4_base" type="box" size="0.05 0.05 0.04" pos="2.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq4_body" type="box" size="0.045 0.045 0.15" pos="2.5 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_sq4_neck" type="box" size="0.02 0.02 0.05" pos="2.5 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_sq4_liquid" type="box" size="0.04 0.04 0.13" pos="2.5 -1.75 3.36" rgba="0.5 0.05 0.02 0.7"/>
+
+<!-- 圆形瓶子 -->
+<geom name="juice_bottle_l3_7_base" type="cylinder" size="0.055 0.04" pos="3.0 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_7_body" type="cylinder" size="0.05 0.15" pos="3.0 -1.75 3.38" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_7_neck" type="cylinder" size="0.025 0.05" pos="3.0 -1.75 3.58" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_7_liquid" type="cylinder" size="0.045 0.13" pos="3.0 -1.75 3.36" rgba="0.4 0.05 0.01 0.7"/>
+
+<!-- 宽圆形瓶子 -->
+<geom name="juice_bottle_l3_wide2_base" type="cylinder" size="0.065 0.04" pos="3.5 -1.75 3.23" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_wide2_body" type="cylinder" size="0.06 0.12" pos="3.5 -1.75 3.35" rgba="0.8 0.85 0.9 0.2"/>
+<geom name="juice_bottle_l3_wide2_neck" type="cylinder" size="0.025 0.05" pos="3.5 -1.75 3.53" rgba="0.85 0.9 0.95 0.25"/>
+<geom name="juice_bottle_l3_wide2_liquid" type="cylinder" size="0.055 0.10" pos="3.5 -1.75 3.33" rgba="0.3 0.02 0.005 0.7"/>
+      <!-- 架子上方的菜单（使用图片纹理，向上移动到瓶子上方） -->
+<geom name="menu_board_1" type="box" size="0.7 0.5 0.02" pos="-2.5 -2.6 4.2" quat="0.707 0.707 0 0" material="menu_mat_1"/>
+<geom name="menu_board_1_frame" type="box" size="0.72 0.52 0.01" pos="-2.5 -2.6 4.22" quat="0.707 0.707 0 0" rgba="0.9 0.9 0.9 1"/>
+<geom name="menu_board_2" type="box" size="0.7 0.5 0.02" pos="0 -2.6 4.2" quat="0.707 0.707 0 0" material="menu_mat_2"/>
+<geom name="menu_board_2_frame" type="box" size="0.72 0.52 0.01" pos="0 -2.6 4.22" quat="0.707 0.707 0 0" rgba="0.9 0.9 0.9 1"/>
+<geom name="menu_board_3" type="box" size="0.7 0.5 0.02" pos="2.5 -2.6 4.2" quat="0.707 0.707 0 0" material="menu_mat_3"/>
+<geom name="menu_board_3_frame" type="box" size="0.72 0.52 0.01" pos="2.5 -2.6 4.22" quat="0.707 0.707 0 0" rgba="0.9 0.9 0.9 1"/>
+
+      <!-- 收银台区域（吧台右端） -->
+      <!-- 收银台底座 -->
+      <geom name="cashier_base" type="box" size="0.7 0.6 0.15" pos="3.8 0 1.3" material="wood_dark"/>
+
+     
+      <!-- 吧台内部灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.9 0.7" specular="0.5 0.4 0.3" pos="0 -0.3 3" dir="0 0 -1" castshadow="false" cutoff="45"/>
+    </body>
+
+    <!-- ========== 蛋糕展示柜（吧台左侧） ========== -->
+    <body name="display_cabinet" pos="15.5 -2.2 0">
+      <!-- 展示柜底座 -->
+      <geom name="cabinet_base" type="box" size="0.6 0.5 0.1" pos="0 0 0.1" material="wood_dark"/>
+
+      <!-- 展示柜主体框架 -->
+      <geom name="cabinet_back" type="box" size="0.6 0.05 0.9" pos="0 -0.45 0.9" material="wood_light"/>
+      <geom name="cabinet_left_frame" type="box" size="0.05 0.5 0.9" pos="-0.55 0 0.9" material="wood_light"/>
+      <geom name="cabinet_right_frame" type="box" size="0.05 0.5 0.9" pos="0.55 0 0.9" material="wood_light"/>
+      <geom name="cabinet_top" type="box" size="0.6 0.5 0.05" pos="0 0 1.85" material="wood_dark"/>
+
+      <!-- 玻璃门（前面和侧面） -->
+      <geom name="cabinet_glass_front" type="box" size="0.5 0.02 0.8" pos="0 0.48 0.9" material="glass_clear"/>
+      <geom name="cabinet_glass_left" type="box" size="0.02 0.5 0.8" pos="-0.48 0 0.9" material="glass_clear"/>
+      <geom name="cabinet_glass_right" type="box" size="0.02 0.5 0.8" pos="0.48 0 0.9" material="glass_clear"/>
+
+      <!-- 门把手 -->
+      <geom name="cabinet_handle" type="cylinder" size="0.012 0.15" pos="0.45 0.5 0.9" quat="0.707 0.707 0 0" material="metal_chrome"/>
+
+      <!-- 展示层板 -->
+      <geom name="shelf_1" type="box" size="0.55 0.45 0.02" pos="0 0 0.55" material="glass_clear"/>
+      <geom name="shelf_2" type="box" size="0.55 0.45 0.02" pos="0 0 1.0" material="glass_clear"/>
+      <geom name="shelf_3" type="box" size="0.55 0.45 0.02" pos="0 0 1.45" material="glass_clear"/>
+
+      <!-- 第一层：蛋糕们 -->
+      <!-- 圆形蛋糕1 - 巧克力蛋糕 -->
+      <geom name="cake_1_base" type="cylinder" size="0.12 0.06" pos="-0.25 0.15 0.61" rgba="0.4 0.25 0.15 1"/>
+      <geom name="cake_1_layer2" type="cylinder" size="0.1 0.04" pos="-0.25 0.15 0.71" rgba="0.9 0.7 0.5 1"/>
+      <geom name="cake_1_top" type="cylinder" size="0.08 0.03" pos="-0.25 0.15 0.78" rgba="0.35 0.2 0.12 1"/>
+      <geom name="cake_1_cherry" type="sphere" size="0.015" pos="-0.25 0.15 0.82" rgba="0.9 0.1 0.1 1"/>
+
+      <!-- 圆形蛋糕2 - 草莓蛋糕 -->
+      <geom name="cake_2_base" type="cylinder" size="0.1 0.05" pos="0.05 0.15 0.60" rgba="0.95 0.9 0.8 1"/>
+      <geom name="cake_2_cream" type="cylinder" size="0.09 0.03" pos="0.05 0.15 0.68" rgba="1 0.95 0.9 1"/>
+      <geom name="cake_2_strawberry1" type="sphere" size="0.012" pos="0.02 0.15 0.72" rgba="0.95 0.2 0.2 1"/>
+      <geom name="cake_2_strawberry2" type="sphere" size="0.012" pos="0.08 0.15 0.72" rgba="0.95 0.2 0.2 1"/>
+
+      <!-- 方形蛋糕 - 提拉米苏 -->
+      <geom name="cake_3_base" type="box" size="0.08 0.08 0.04" pos="0.3 0.1 0.61" rgba="0.85 0.75 0.6 1"/>
+      <geom name="cake_3_layer" type="box" size="0.08 0.08 0.02" pos="0.3 0.1 0.67" rgba="0.95 0.9 0.85 1"/>
+      <geom name="cake_3_cocoa" type="box" size="0.08 0.08 0.005" pos="0.3 0.1 0.695" rgba="0.3 0.2 0.15 1"/>
+
+      <!-- 第二层：各种蛋糕和甜点 -->
+      <!-- 芝士蛋糕 -->
+      <geom name="cake_4_base" type="cylinder" size="0.09 0.04" pos="-0.25 0.1 1.04" rgba="0.95 0.9 0.7 1"/>
+      <geom name="cake_4_top" type="cylinder" size="0.08 0.01" pos="-0.25 0.1 1.09" rgba="0.9 0.5 0.2 1"/>
+
+      <!-- 纸杯蛋糕组 -->
+      <geom name="cupcake_1_cup" type="cylinder" size="0.03 0.02" pos="0 -0.05 1.02" rgba="0.9 0.85 0.8 1"/>
+      <geom name="cupcake_1_cake" type="cylinder" size="0.032 0.025" pos="0 -0.05 1.065" rgba="0.8 0.6 0.4 1"/>
+      <geom name="cupcake_1_cream" type="sphere" size="0.025" pos="0 -0.05 1.10" rgba="1 0.95 0.9 1"/>
+
+      <geom name="cupcake_2_cup" type="cylinder" size="0.03 0.02" pos="0.1 -0.05 1.02" rgba="0.9 0.85 0.8 1"/>
+      <geom name="cupcake_2_cake" type="cylinder" size="0.032 0.025" pos="0.1 -0.05 1.065" rgba="0.5 0.35 0.25 1"/>
+      <geom name="cupcake_2_cream" type="sphere" size="0.025" pos="0.1 -0.05 1.10" rgba="0.95 0.85 0.7 1"/>
+
+      <geom name="cupcake_3_cup" type="cylinder" size="0.03 0.02" pos="0.2 -0.05 1.02" rgba="0.9 0.85 0.8 1"/>
+      <geom name="cupcake_3_cake" type="cylinder" size="0.032 0.025" pos="0.2 -0.05 1.065" rgba="0.9 0.7 0.5 1"/>
+      <geom name="cupcake_3_cream" type="sphere" size="0.025" pos="0.2 -0.05 1.10" rgba="0.95 0.7 0.8 1"/>
+
+      <!-- 马卡龙 -->
+      <geom name="macaron_1_bottom" type="cylinder" size="0.02 0.008" pos="0.3 0.15 1.02" rgba="0.95 0.7 0.8 1"/>
+      <geom name="macaron_1_filling" type="cylinder" size="0.018 0.004" pos="0.3 0.15 1.032" rgba="1 0.95 0.9 1"/>
+      <geom name="macaron_1_top" type="cylinder" size="0.02 0.008" pos="0.3 0.15 1.044" rgba="0.95 0.7 0.8 1"/>
+
+      <geom name="macaron_2_bottom" type="cylinder" size="0.02 0.008" pos="0.35 0.15 1.02" rgba="0.7 0.9 0.75 1"/>
+      <geom name="macaron_2_filling" type="cylinder" size="0.018 0.004" pos="0.35 0.15 1.032" rgba="1 0.95 0.9 1"/>
+      <geom name="macaron_2_top" type="cylinder" size="0.02 0.008" pos="0.35 0.15 1.044" rgba="0.7 0.9 0.75 1"/>
+
+      <!-- 第三层：面包们 -->
+      <!-- 法棍面包 -->
+      <geom name="baguette_1" type="capsule" size="0.03 0.15" pos="-0.3 0.05 1.48" quat="0.707 0 0.707 0" rgba="0.85 0.7 0.5 1"/>
+      <geom name="baguette_2" type="capsule" size="0.03 0.15" pos="-0.3 -0.1 1.48" quat="0.707 0 0.707 0" rgba="0.82 0.68 0.48 1"/>
+
+      <!-- 牛角面包 -->
+      <geom name="croissant_1" type="box" size="0.06 0.04 0.03" pos="0 0.1 1.48" quat="0.966 0 0.259 0" rgba="0.9 0.75 0.5 1"/>
+      <geom name="croissant_2" type="box" size="0.06 0.04 0.03" pos="0.1 0.1 1.48" quat="0.966 0 -0.259 0" rgba="0.88 0.73 0.48 1"/>
+
+      <!-- 圆面包 -->
+      <geom name="roll_1" type="sphere" size="0.045" pos="0.25 0.05 1.495" rgba="0.8 0.65 0.45 1"/>
+      <geom name="roll_2" type="sphere" size="0.045" pos="0.35 0.05 1.495" rgba="0.82 0.67 0.47 1"/>
+      <geom name="roll_3" type="sphere" size="0.045" pos="0.3 -0.05 1.495" rgba="0.78 0.63 0.43 1"/>
+
+      <!-- 甜甜圈 -->
+      <geom name="donut_1" type="cylinder" size="0.04 0.015" pos="-0.1 -0.15 1.47" rgba="0.85 0.65 0.45 1"/>
+      <geom name="donut_1_hole" type="cylinder" size="0.02 0.016" pos="-0.1 -0.15 1.47" rgba="0.2 0.15 0.1 0.5"/>
+      <geom name="donut_1_icing" type="cylinder" size="0.041 0.008" pos="-0.1 -0.15 1.493" rgba="0.95 0.7 0.8 1"/>
+
+      <geom name="donut_2" type="cylinder" size="0.04 0.015" pos="0.05 -0.15 1.47" rgba="0.85 0.65 0.45 1"/>
+      <geom name="donut_2_hole" type="cylinder" size="0.02 0.016" pos="0.05 -0.15 1.47" rgba="0.2 0.15 0.1 0.5"/>
+      <geom name="donut_2_icing" type="cylinder" size="0.041 0.008" pos="0.05 -0.15 1.493" rgba="0.6 0.4 0.25 1"/>
+
+      <!-- 展示柜内部照明 -->
+      <light mode="fixed" directional="false" diffuse="1 0.98 0.95" specular="0.6 0.6 0.5" pos="0 0 1.75" dir="0 0 -1" castshadow="false" cutoff="60"/>
+    </body>
+
+    <!-- ========== 天花板旋转风扇（动态，连接到天花板） ========== -->
+    <body name="ceiling_fan" pos="20 0 6.15">
+      <!-- 连接杆（连接到天花板） -->
+      <geom name="fan_rod" type="cylinder" size="0.08 0.35" pos="0 0 -0.35" material="metal_dark"/>
+      <!-- 底座 -->
+      <geom name="fan_mount" type="cylinder" size="0.15 0.15" pos="0 0 -0.7" material="metal_dark"/>
+
+      <!-- 旋转部分 -->
+      <body name="fan_rotor" pos="0 0 -0.85">
+        <joint name="fan_rotation" type="hinge" axis="0 0 1" damping="0.1"/>
+        <geom name="fan_center" type="cylinder" size="0.12 0.05" pos="0 0 0" material="metal_chrome"/>
+
+        <!-- 扇叶1 -->
+        <geom name="fan_blade_1" type="box" size="0.6 0.12 0.02" pos="0 0 0" material="wood_light"/>
+        <!-- 扇叶2 -->
+        <geom name="fan_blade_2" type="box" size="0.6 0.12 0.02" pos="0 0 0" quat="0.866 0 0 0.5" material="wood_light"/>
+        <!-- 扇叶3 -->
+        <geom name="fan_blade_3" type="box" size="0.6 0.12 0.02" pos="0 0 0" quat="0.5 0 0 0.866" material="wood_light"/>
+      </body>
+    </body>
+
+<!-- ========== 吊灯（连接到天花板） ========== -->
+    <body name="pendant_lamp_1" pos="17.5 1 6.15">
+      <!-- 吊线（从天花板垂下，固定连接） -->
+      <geom name="lamp1_cord" type="cylinder" size="0.01 0.65" pos="0 0 -0.65" material="metal_dark"/>
+      <!-- 灯罩 -->
+      <geom name="lamp1_shade" type="sphere" size="0.2" pos="0 0 -1.3" rgba="0.9 0.85 0.7 0.8"/>
+      <!-- 灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.85 0.6" specular="0.4 0.3 0.2" pos="0 0 -1.3" dir="0 0 -1" castshadow="false" cutoff="50"/>
+    </body>
+
+    <body name="pendant_lamp_2" pos="22.5 1 6.15">
+      <!-- 吊线（从天花板垂下，固定连接） -->
+      <geom name="lamp2_cord" type="cylinder" size="0.01 0.65" pos="0 0 -0.65" material="metal_dark"/>
+      <!-- 灯罩 -->
+      <geom name="lamp2_shade" type="sphere" size="0.2" pos="0 0 -1.3" rgba="0.9 0.85 0.7 0.8"/>
+      <!-- 灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.85 0.6" specular="0.4 0.3 0.2" pos="0 0 -1.3" dir="0 0 -1" castshadow="false" cutoff="50"/>
+    </body>
+
+    <!-- ========== 桌椅组合 ========== -->
+    <!-- 左右两面墙各有三套桌椅，沙发靠墙，椅子背朝桌子，沙发背朝椅子 -->
+
+    <!-- ========== 左墙（x=-6）两套桌椅 ========== -->
+    <!-- 桌子2（左墙第2套） - 圆桌 -->
+    <body name="table_2" pos="15.7 0.5 0">
+      <geom name="table2_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table2_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子2的沙发（靠左墙，背朝椅子） -->
+    <body name="sofa_2" pos="14.7 0.5 0" quat="0.707 0 0 0.707">
+      <geom name="sofa2_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_white"/>
+      <geom name="sofa2_back" type="box" size="0.8 0.1 0.4" pos="0 0.4 0.7" material="wood_round"/>
+      <geom name="sofa2_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_round"/>
+      <geom name="sofa2_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_round"/>
+    </body>
+
+    <!-- 桌子2的椅子（在沙发正对面，向左再转90度，总共270度） -->
+    <body name="chair_2_1" pos="16.7 0.5 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair2_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair2_1_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair2_1_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair2_1_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair2_1_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair2_1_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair2_1_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子3（左墙第3套） - 圆桌 -->
+    <body name="table_3" pos="15.7 3 0">
+      <geom name="table3_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table3_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子3的沙发（靠左墙，背朝椅子） -->
+    <body name="sofa_3" pos="14.7 3 0" quat="0.707 0 0 0.707">
+      <geom name="sofa3_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_white"/>
+      <geom name="sofa3_back" type="box" size="0.8 0.1 0.4" pos="0 0.4 0.7" material="wood_round"/>
+      <geom name="sofa3_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_round"/>
+      <geom name="sofa3_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_round"/>
+    </body>
+
+    <!-- 桌子3的椅子（在沙发正对面，向左再转90度，总共270度） -->
+    <body name="chair_3_1" pos="16.7 3 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair3_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair3_1_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair3_1_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair3_1_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair3_1_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair3_1_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair3_1_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- ========== 右墙（x=6）两套桌椅 ========== -->
+    <!-- 桌子5（右墙第2套） - 圆桌 -->
+    <body name="table_5" pos="24.3 0.5 0">
+      <geom name="table5_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table5_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子5的沙发（靠右墙，180度旋转后背朝椅子） -->
+    <body name="sofa_5" pos="25.3 0.5 0" quat="0.707 0 0 0.707">
+      <geom name="sofa5_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_white"/>
+      <geom name="sofa5_back" type="box" size="0.8 0.1 0.4" pos="0 -0.4 0.7" material="wood_round"/>
+      <geom name="sofa5_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_round"/>
+      <geom name="sofa5_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_round"/>
+    </body>
+
+    <!-- 桌子5的椅子（在沙发正对面，水平旋转180度） -->
+    <body name="chair_5_1" pos="23.3 0.5 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair5_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair5_1_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair5_1_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair5_1_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair5_1_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair5_1_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair5_1_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子6（右墙第3套） - 圆桌 -->
+    <body name="table_6" pos="24.3 3 0">
+      <geom name="table6_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table6_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子6的沙发（靠右墙，180度旋转后背朝椅子） -->
+    <body name="sofa_6" pos="25.3 3 0" quat="0.707 0 0 -0.707">
+      <geom name="sofa6_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_white"/>
+      <geom name="sofa6_back" type="box" size="0.8 0.1 0.4" pos="0 0.4 0.7" material="wood_round"/>
+      <geom name="sofa6_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_round"/>
+      <geom name="sofa6_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_round"/>
+    </body>
+
+    <!-- 桌子6的椅子（在沙发正对面，水平旋转180度） -->
+    <body name="chair_6_1" pos="23.3 3 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair6_1_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair6_1_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair6_1_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair6_1_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair6_1_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair6_1_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair6_1_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- ========== 中间区域四套桌椅 ========== -->
+    <!-- 桌子7（中间左前套） - 圆桌 -->
+    <body name="table_7" pos="18.5 0.5 0">
+      <geom name="table7_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table7_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子7的椅子（左） -->
+    <body name="chair_7_3" pos="17.5 0.5 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair7_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair7_3_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair7_3_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_3_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_3_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_3_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_3_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子7的椅子（右） -->
+    <body name="chair_7_4" pos="19.5 0.5 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair7_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair7_4_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair7_4_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_4_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_4_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_4_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair7_4_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子8（中间左后套） - 圆桌 -->
+    <body name="table_8" pos="18.5 3.0 0">
+      <geom name="table8_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table8_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子8的椅子（左） -->
+    <body name="chair_8_3" pos="17.5 3.0 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair8_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair8_3_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair8_3_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_3_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_3_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_3_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_3_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子8的椅子（右） -->
+    <body name="chair_8_4" pos="19.5 3.0 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair8_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair8_4_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair8_4_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_4_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_4_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_4_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair8_4_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子9（中间右前套） - 圆桌 -->
+    <body name="table_9" pos="21.5 0.5 0">
+      <geom name="table9_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table9_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子9的椅子（左） -->
+    <body name="chair_9_3" pos="20.5 0.5 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair9_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair9_3_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair9_3_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_3_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_3_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_3_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_3_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子9的椅子（右） -->
+    <body name="chair_9_4" pos="22.5 0.5 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair9_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair9_4_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair9_4_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_4_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_4_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_4_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair9_4_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子10（中间右后套） - 圆桌 -->
+    <body name="table_10" pos="21.5 3.0 0">
+      <geom name="table10_top" type="cylinder" size="0.5 0.04" pos="0 0 0.8" material="wood_dark"/>
+      <geom name="table10_leg" type="cylinder" size="0.05 0.4" pos="0 0 0.4" material="metal_dark"/>
+    </body>
+
+    <!-- 桌子10的椅子（左） -->
+    <body name="chair_10_3" pos="20.5 3.0 0.45" quat="0.707 0 0 -0.707">
+      <geom name="chair10_3_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair10_3_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair10_3_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_3_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_3_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_3_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_3_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- 桌子10的椅子（右） -->
+    <body name="chair_10_4" pos="22.5 3.0 0.45" quat="0.707 0 0 0.707">
+      <geom name="chair10_4_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="chair10_4_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="chair10_4_leg1" type="cylinder" size="0.02 0.225" pos="-0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_4_leg2" type="cylinder" size="0.02 0.225" pos="0.18 -0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_4_leg3" type="cylinder" size="0.02 0.225" pos="-0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_4_leg4" type="cylinder" size="0.02 0.225" pos="0.18 0.18 -0.225" material="metal_dark"/>
+      <geom name="chair10_4_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_white"/>
+    </body>
+
+    <!-- ========== 装饰植物 ========== -->
+    <body name="plant_1" pos="14.5 -4.5 0">
+      <geom name="pot_1" type="cylinder" size="0.2 0.25" pos="0 0 0.25" rgba="0.6 0.4 0.3 1"/>
+      <geom name="plant_1_leaves" type="sphere" size="0.35" pos="0 0 0.7" rgba="0.2 0.5 0.3 1"/>
+    </body>
+
+    <body name="plant_2" pos="25.5 -4.5 0">
+      <geom name="pot_2" type="cylinder" size="0.2 0.25" pos="0 0 0.25" rgba="0.6 0.4 0.3 1"/>
+      <geom name="plant_2_leaves" type="sphere" size="0.35" pos="0 0 0.7" rgba="0.2 0.5 0.3 1"/>
+    </body>
+
+    <!-- ========== 外部装饰 ========== -->
+
+    <!-- 路灯 -->
+    <body name="street_lamp" pos="28 8 0">
+      <geom name="lamp_post" type="cylinder" size="0.08 2.5" pos="0 0 2.5" rgba="0.2 0.2 0.2 1"/>
+      <geom name="lamp_head" type="sphere" size="0.25" pos="0 0 5.2" rgba="0.9 0.85 0.7 0.7"/>
+      <light mode="fixed" directional="false" diffuse="0.8 0.75 0.6" specular="0.3 0.25 0.2" pos="0 0 5.2" dir="0 0 -1" castshadow="false" cutoff="60"/>
+    </body>
+
+
+
+    <!-- ========== 相机视角 ========== -->
+    <camera name="exterior_view" pos="12 12 6" xyaxes="-0.7 0.7 0 -0.35 -0.35 0.87" mode="fixed"/>
+    <camera name="front_door_view" pos="0 10 3" xyaxes="1 0 0 0 0.3 0.95" mode="fixed"/>
+    <camera name="inside_view" pos="0 0 2.5" xyaxes="1 0 0 0 0.7 0.7" mode="fixed"/>
+    <camera name="bar_view" pos="0 -6 2" xyaxes="1 0 0 0 0.5 0.87" mode="fixed"/>
+    <camera name="top_view" pos="0 0 20" xyaxes="1 0 0 0 1 0" mode="fixed"/>
+    <camera name="side_view" pos="-12 0 4" xyaxes="0 1 0 -0.3 0 0.95" mode="fixed"/>
+
+  </worldbody>
+
+  <!-- ========== 执行器（控制动态元素） ========== -->
+  <actuator>
+    <!-- 风扇电机（持续顺时针旋转，正值=顺时针） -->
+    <velocity name="fan_motor" joint="fan_rotation" kv="10" gear="1"/>
+
+    <!-- 门控制 -->
+    <position name="door_control" joint="door_hinge" kp="50" gear="1"/>
+  </actuator>
+
+  <!-- ========== 传感器 ========== -->
+  <sensor>
+    <!-- 风扇转速传感器 -->
+    <jointvel name="fan_speed" joint="fan_rotation"/>
+
+    <!-- 门位置传感器 -->
+    <jointpos name="door_position" joint="door_hinge"/>
+  </sensor>
+
+  <!-- ========== 关键帧（预设场景状态） ========== -->
+  <keyframe>
+    <!-- 初始状态 -->
+    <key name="initial" ctrl="5 0"/>
+
+    <!-- 风扇快速顺时针旋转（正值=顺时针） -->
+    <key name="fan_fast" ctrl="15 0"/>
+
+    <!-- 门打开 -->
+    <key name="door_open" ctrl="5 80"/>
+  </keyframe>
+
+</mujoco>

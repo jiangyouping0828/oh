@@ -1,0 +1,1194 @@
+<mujoco model="teahouse_only">
+  <!-- ========== 编译器设置 ========== -->
+  <!-- 模型名称：teahouse_only - 独立茶室模型 -->
+  <!-- angle="degree"：使用角度制而非弧度制，便于角度参数设置 -->
+  <!-- coordinate="local"：使用局部坐标系，便于模型组件定位 -->
+  <!-- inertiafromgeom="true"：从几何体自动计算惯性，简化物理设置 -->
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+
+  <!-- ========== 物理选项 ========== -->
+  <!-- timestep="0.005"：时间步长为0.005秒，确保物理模拟的精确性 -->
+  <!-- gravity="0 0 -9.81"：重力加速度，Z轴向下9.81m/s²，模拟真实重力环境 -->
+  <!-- iterations="50"：每次时间步长的迭代次数，确保物理约束的准确性 -->
+  <!-- solver="Newton"：使用牛顿法求解器，处理复杂的物理约束 -->
+  <!-- tolerance="1e-10"：求解器容差，确保数值计算的精度 -->
+  <option timestep="0.005" gravity="0 0 -9.81" iterations="50" solver="Newton" tolerance="1e-10">
+    <!-- contact="enable"：启用碰撞检测，允许物体间相互碰撞 -->
+    <!-- gravity="enable"：启用重力，使物体受重力影响 -->
+    <flag contact="enable" gravity="enable"/>
+  </option>
+
+  <!-- ========== 默认设置 ========== -->
+  <!-- 为所有几何体、关节和电机设置默认参数，简化模型构建 -->
+  <default>
+    <!-- 几何体默认设置 -->
+    <!-- conaffinity="1"：碰撞亲和性为1，所有几何体可以相互碰撞 -->
+    <!-- condim="3"：接触维度为3，支持3D空间中的完整接触 -->
+    <!-- friction="1 0.5 0.005"：摩擦系数（滑动摩擦1.0，扭转摩擦0.5，滚动摩擦0.005） -->
+    <!-- solimp="0.9 0.95 0.001"：阻抗参数（阻尼0.9，弹性0.95，边界0.001） -->
+    <!-- solref="0.02 1"：求解器参考参数（时间常数0.02，阻尼比1.0） -->
+    <geom conaffinity="1" condim="3" friction="1 0.5 0.005" solimp="0.9 0.95 0.001" solref="0.02 1"/>
+    
+    <!-- 关节默认设置 -->
+    <!-- damping="0.5"：关节阻尼系数0.5，提供适度的运动阻力 -->
+    <!-- armature="0.01"：关节惯性0.01，模拟关节的转动惯量 -->
+    <joint damping="0.5" armature="0.01"/>
+    
+    <!-- 电机默认设置 -->
+    <!-- ctrlrange="-1 1"：控制范围从-1到1，支持双向控制 -->
+    <!-- ctrllimited="true"：启用控制限制，防止超出设定范围 -->
+    <motor ctrlrange="-1 1" ctrllimited="true"/>
+  </default>
+
+  <!-- ========== 视觉设置 ========== -->
+  <!-- 控制渲染和视觉效果的相关参数，优化茶室场景的视觉表现 -->
+  <visual>
+    <!-- 环境映射设置 -->
+    <!-- force="0.1"：环境光强度0.1，提供柔和的全局照明 -->
+    <!-- zfar="100"：最大可视距离100米，确保远处物体可见 -->
+    <map force="0.1" zfar="100"/>
+    
+    <!-- 雾效设置 -->
+    <!-- haze="0.05 0.08 0.12 1"：雾效颜色（深蓝灰色）和完全透明度 -->
+    <!-- 雾效为场景增加深度感和氛围感 -->
+    <rgba haze="0.05 0.08 0.12 1"/>
+    
+    <!-- 渲染质量设置 -->
+    <!-- shadowsize="4096"：阴影贴图分辨率4096x4096，提供高质量的软阴影 -->
+    <quality shadowsize="4096"/>
+    
+    <!-- 全局渲染设置 -->
+    <!-- offwidth="1280" offheight="720"：离屏渲染分辨率1280x720，高清渲染 -->
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
+  <!-- ========== 资源定义 ========== -->
+  <!-- 定义茶室场景中使用的纹理、材质等资源 -->
+  <asset>
+
+
+    <!-- ========== 木地板材质 ========== -->
+    <!-- 木地板纹理：使用内置棋盘格纹理模拟传统木地板效果 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- builtin="checker"：使用内置棋盘格纹理 -->
+    <!-- rgb1="0.55 0.45 0.35"：浅棕色木纹颜色 -->
+    <!-- rgb2="0.5 0.4 0.3"：深棕色木纹颜色，形成对比 -->
+    <!-- width="512" height="512"：纹理分辨率512x512像素 -->
+    <texture name="wood_floor" type="2d" builtin="checker" rgb1="0.55 0.45 0.35" rgb2="0.5 0.4 0.3" width="512" height="512"/>
+    
+    <!-- 木地板材质：应用木地板纹理并设置材质属性 -->
+    <!-- texture="wood_floor"：使用上面定义的木地板纹理 -->
+    <!-- texrepeat="10 10"：纹理重复10x10次，形成细密的木纹效果 -->
+    <!-- specular="0.3"：中等镜面反射，模拟木地板的光泽 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.1"：低反射率 -->
+    <material name="wood_floor_mat" texture="wood_floor" texrepeat="10 10" specular="0.3" shininess="0.3" reflectance="0.1"/>
+
+    <!-- ========== 榻榻米材质 ========== -->
+    <!-- 榻榻米纹理：模拟传统日式榻榻米地板效果 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- builtin="checker"：使用内置棋盘格纹理模拟榻榻米编织纹理 -->
+    <!-- rgb1="0.75 0.7 0.5"：浅米色榻榻米颜色 -->
+    <!-- rgb2="0.7 0.65 0.45"：稍深的米色，形成编织纹理 -->
+    <!-- width="512" height="512"：纹理分辨率512x512像素 -->
+    <texture name="tatami" type="2d" builtin="checker" rgb1="0.75 0.7 0.5" rgb2="0.7 0.65 0.45" width="512" height="512"/>
+    
+    <!-- 榻榻米材质：应用榻榻米纹理并设置材质属性 -->
+    <!-- texture="tatami"：使用上面定义的榻榻米纹理 -->
+    <!-- texrepeat="8 8"：纹理重复8x8次，形成合适的榻榻米尺寸 -->
+    <!-- specular="0.1"：低镜面反射，模拟榻榻米的粗糙表面 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="tatami_mat" texture="tatami" texrepeat="8 8" specular="0.1" shininess="0.1" reflectance="0"/>
+    
+    <!-- 深色榻榻米纹理：用于棋盘等特殊区域 -->
+    <!-- rgb1="0.6 0.55 0.35"：深米色榻榻米颜色 -->
+    <!-- rgb2="0.55 0.5 0.3"：更深的米色，形成对比 -->
+    <!-- width="512" height="512"：纹理分辨率512x512像素 -->
+    <texture name="tatami_dark" type="2d" builtin="checker" rgb1="0.6 0.55 0.35" rgb2="0.55 0.5 0.3" width="512" height="512"/>
+    
+    <!-- 深色榻榻米材质：用于棋盘等装饰性区域 -->
+    <!-- texture="tatami_dark"：使用深色榻榻米纹理 -->
+    <!-- texrepeat="8 8"：纹理重复8x8次 -->
+    <!-- specular="0.05"：极低镜面反射 -->
+    <!-- shininess="0.05"：极低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="tatami_mat_dark" texture="tatami_dark" texrepeat="8 8" specular="0.05" shininess="0.05" reflectance="0"/>
+
+    <!-- ========== 玻璃材质 ========== -->
+    <!-- 高透明玻璃材质：用于茶室窗户等透明玻璃结构 -->
+    <!-- rgba="0.8 0.9 0.95 0.15"：浅蓝绿色玻璃颜色，透明度15% -->
+    <!-- specular="1"：最高镜面反射，模拟玻璃表面的高光 -->
+    <!-- shininess="1"：最高光泽度 -->
+    <!-- reflectance="0.7"：高反射率，模拟玻璃的反射特性 -->
+    <material name="glass_clear" rgba="0.8 0.9 0.95 0.15" specular="1" shininess="1" reflectance="0.7"/>
+
+    <!-- 半透明玻璃门材质：用于茶室玻璃门，比窗户稍不透明 -->
+    <!-- rgba="0.75 0.85 0.9 0.25"：浅蓝灰色玻璃颜色，透明度25% -->
+    <!-- specular="1"：最高镜面反射 -->
+    <!-- shininess="1"：最高光泽度 -->
+    <!-- reflectance="0.6"：较高反射率 -->
+    <material name="glass_door" rgba="0.75 0.85 0.9 0.25" specular="1" shininess="1" reflectance="0.6"/>
+
+    <!-- ========== 金属材质 ========== -->
+    <!-- 深色金属材质：用于茶室门框、结构件等深色金属部件 -->
+    <!-- rgba="0.2 0.2 0.22 1"：深灰色金属颜色，接近黑色 -->
+    <!-- specular="0.9"：高镜面反射，模拟金属表面的光泽 -->
+    <!-- shininess="0.8"：高光泽度 -->
+    <!-- reflectance="0.4"：中等反射率 -->
+    <material name="metal_dark" rgba="0.2 0.2 0.22 1" specular="0.9" shininess="0.8" reflectance="0.4"/>
+    
+    <!-- 铬金属材质：用于茶具、装饰品等亮面金属部件 -->
+    <!-- rgba="0.8 0.8 0.82 1"：亮银色金属颜色 -->
+    <!-- specular="1"：最高镜面反射 -->
+    <!-- shininess="0.9"：极高光泽度 -->
+    <!-- reflectance="0.6"：高反射率 -->
+    <material name="metal_chrome" rgba="0.8 0.8 0.82 1" specular="1" shininess="0.9" reflectance="0.6"/>
+
+    <!-- ========== 木材材质 ========== -->
+    <!-- 深色木材材质：用于茶室深色木质结构，如梁柱等 -->
+    <!-- rgba="0.3 0.2 0.15 1"：深棕色木材颜色，传统茶室常用色调 -->
+    <!-- specular="0.2"：低镜面反射，模拟木材的自然光泽 -->
+    <!-- shininess="0.2"：低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="wood_dark" rgba="0.3 0.2 0.15 1" specular="0.2" shininess="0.2" reflectance="0"/>
+    
+    <!-- 浅色木材材质：用于茶室浅色木质结构，如墙面、家具等 -->
+    <!-- rgba="0.7 0.6 0.5 1"：浅棕色木材颜色，明亮温暖的色调 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="wood_light" rgba="0.7 0.6 0.5 1" specular="0.3" shininess="0.3" reflectance="0.05"/>
+    
+    <!-- 红色木材材质：用于茶室红色木质结构，如门框、装饰等 -->
+    <!-- rgba="0.6 0.25 0.2 1"：红棕色木材颜色，传统日式建筑常用色调 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="wood_red" rgba="0.6 0.25 0.2 1" specular="0.3" shininess="0.3" reflectance="0.05"/>
+    
+    <!-- 书架木材材质：用于书架结构 -->
+    <!-- rgba="0.45 0.35 0.25 1"：深棕色木材颜色，适合书架 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="wood_shelf" rgba="0.45 0.35 0.25 1" specular="0.3" shininess="0.3" reflectance="0.05"/>
+    
+    <!-- 米白色木材材质：用于书架底部 -->
+    <!-- rgba="0.75 0.7 0.6 1"：米白色木材颜色，与书架主体形成对比 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.3"：中等光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="wood_beige" rgba="0.75 0.7 0.6 1" specular="0.3" shininess="0.3" reflectance="0.05"/>
+    
+    <!-- 书籍材质 -->
+    <material name="book_red" rgba="0.8 0.2 0.2 1" specular="0.3" shininess="0.2" />
+    <material name="book_blue" rgba="0.2 0.4 0.7 1" specular="0.3" shininess="0.2" />
+    <material name="book_green" rgba="0.2 0.6 0.3 1" specular="0.3" shininess="0.2" />
+    <material name="book_brown" rgba="0.5 0.35 0.2 1" specular="0.3" shininess="0.2" />
+    <material name="book_yellow" rgba="0.9 0.7 0.1 1" specular="0.3" shininess="0.2" />
+    <material name="book_purple" rgba="0.6 0.3 0.8 1" specular="0.3" shininess="0.2" />
+    
+    <!-- 竹材质：用于茶室竹制装饰和结构 -->
+    <!-- rgba="0.55 0.65 0.4 1"：竹绿色，模拟竹子的自然颜色 -->
+    <!-- specular="0.2"：低镜面反射 -->
+    <!-- shininess="0.2"：低光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="bamboo" rgba="0.55 0.65 0.4 1" specular="0.2" shininess="0.2" reflectance="0.05"/>
+
+    <!-- ========== 布料材质 ========== -->
+    <!-- 红色布料材质：用于茶室装饰性布料，如坐垫、挂帘等 -->
+    <!-- rgba="0.8 0.2 0.2 1"：鲜艳的红色，传统茶室装饰常用颜色 -->
+    <!-- specular="0.1"：低镜面反射，模拟布料的粗糙表面 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_red" rgba="0.8 0.2 0.2 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 蓝色布料材质：用于茶室装饰性布料 -->
+    <!-- rgba="0.2 0.4 0.7 1"：深蓝色，沉稳的色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_blue" rgba="0.2 0.4 0.7 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 绿色布料材质：用于茶室装饰性布料 -->
+    <!-- rgba="0.2 0.6 0.3 1"：深绿色，自然和谐的色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_green" rgba="0.2 0.6 0.3 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 橙色布料材质：用于茶室装饰性布料 -->
+    <!-- rgba="0.9 0.5 0.2 1"：温暖的橙色，明亮的装饰色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_orange" rgba="0.9 0.5 0.2 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 紫色布料材质：用于茶室装饰性布料 -->
+    <!-- rgba="0.6 0.3 0.7 1"：深紫色，高雅的装饰色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_purple" rgba="0.6 0.3 0.7 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- ========== 陶瓷材质 ========== -->
+    <!-- 陶瓷材质：用于茶具、花瓶等陶瓷制品 -->
+    <!-- rgba="0.75 0.7 0.65 1"：米白色陶瓷颜色，传统茶具常用色调 -->
+    <!-- specular="0.2"：低镜面反射，模拟陶瓷的微光 -->
+    <!-- shininess="0.2"：低光泽度 -->
+    <!-- reflectance="0.05"：极低反射率 -->
+    <material name="pottery" rgba="0.75 0.7 0.65 1" specular="0.2" shininess="0.2" reflectance="0.05"/>
+    
+    <!-- 米色布料材质：用于茶室中性色调布料 -->
+    <!-- rgba="0.9 0.85 0.75 1"：温暖的米色，柔和的装饰色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_beige" rgba="0.9 0.85 0.75 1" specular="0.1" shininess="0.1"/>
+    
+    <!-- 金色布料材质：用于茶室装饰性金色布料 -->
+    <!-- rgba="0.85 0.7 0.3 1"：金色，高贵的装饰色调 -->
+    <!-- specular="0.3"：中等镜面反射 -->
+    <!-- shininess="0.2"：低光泽度 -->
+    <material name="fabric_gold" rgba="0.85 0.7 0.3 1" specular="0.3" shininess="0.2"/>
+    
+    <!-- 白色布料材质：用于茶室纯白色布料 -->
+    <!-- rgba="1 1 1 1"：纯白色，简洁干净的色调 -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="fabric_white" rgba="1 1 1 1" specular="0.1" shininess="0.1"/>
+
+    <!-- ========== 纸质材料 ========== -->
+    <!-- 白色纸质材料：用于茶室屏风、灯笼等纸质装饰 -->
+    <!-- rgba="0.95 0.93 0.88 0.8"：米白色纸张颜色，透明度80% -->
+    <!-- specular="0.1"：低镜面反射，模拟纸张的粗糙表面 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="paper_white" rgba="0.95 0.93 0.88 0.8" specular="0.1" shininess="0.1"/>
+    
+    <!-- 红色纸质材料：用于茶室红色装饰性纸质元素 -->
+    <!-- rgba="0.9 0.2 0.15 0.7"：鲜艳的红色，透明度70% -->
+    <!-- specular="0.1"：低镜面反射 -->
+    <!-- shininess="0.1"：低光泽度 -->
+    <material name="paper_red" rgba="0.9 0.2 0.15 0.7" specular="0.1" shininess="0.1"/>
+
+    <!-- ========== 草地材质 ========== -->
+    <!-- 草地纹理：使用棋盘格纹理模拟茶室外围的草地效果 -->
+    <!-- type="2d"：2D纹理 -->
+    <!-- builtin="checker"：使用内置棋盘格纹理 -->
+    <!-- rgb1="0.3 0.5 0.3"：深绿色草地颜色 -->
+    <!-- rgb2="0.28 0.48 0.28"：稍深的绿色，形成草地纹理 -->
+    <!-- width="512" height="512"：纹理分辨率512x512像素 -->
+    <texture name="grass" type="2d" builtin="checker" rgb1="0.3 0.5 0.3" rgb2="0.28 0.48 0.28" width="512" height="512"/>
+    
+    <!-- 草地材质：应用草地纹理并设置材质属性 -->
+    <!-- texture="grass"：使用上面定义的草地纹理 -->
+    <!-- texrepeat="40 40"：纹理重复40x40次，形成细密的草地纹理 -->
+    <!-- specular="0.1"：极低镜面反射，模拟草地的粗糙表面 -->
+    <!-- shininess="0.05"：极低光泽度 -->
+    <!-- reflectance="0"：无反射 -->
+    <material name="grass_mat" texture="grass" texrepeat="40 40" specular="0.1" shininess="0.05" reflectance="0"/>
+
+    <!-- ========== 天空盒纹理 ========== -->
+    <!-- 天空盒纹理：用于茶室环境背景的天空效果 -->
+    <!-- type="skybox"：天空盒类型纹理 -->
+    <!-- builtin="gradient"：内置渐变纹理 -->
+    <!-- rgb1="0.6 0.75 0.9"：天空顶部颜色（浅蓝色） -->
+    <!-- rgb2="0.3 0.5 0.7"：天空底部颜色（深蓝色） -->
+    <!-- width="512" height="512"：纹理分辨率512x512像素 -->
+    <texture name="skybox" type="skybox" builtin="gradient" rgb1="0.6 0.75 0.9" rgb2="0.3 0.5 0.7" width="512" height="512"/>
+    
+
+
+  </asset>
+
+
+
+  <!-- ========== 世界主体 ========== -->
+  <!-- 定义茶室场景中的物理实体，包括光源、地面和建筑结构 -->
+  <worldbody>
+    <!-- ========== 光源设置 ========== -->
+    <!-- 主光源（阳光 - 增强）：模拟太阳光，提供主要照明 -->
+    <!-- directional="true"：定向光源，模拟太阳的平行光 -->
+    <!-- diffuse="1.2 1.2 1.1"：漫反射光强度（略偏暖色调） -->
+    <!-- specular="0.6 0.6 0.5"：镜面反射光强度 -->
+    <!-- pos="10 20 40"：光源位置（X=30, Y=20, Z=40） -->
+    <!-- dir="-1 -0.7 -1.5"：光源方向向量 -->
+    <!-- castshadow="true"：启用阴影投射 -->
+    <light directional="true" diffuse="1.2 1.2 1.1" specular="0.6 0.6 0.5" pos="10 20 40" dir="-1 -0.7 -1.5" castshadow="true"/>
+
+    <!-- 辅助光源 - 增强：补充照明，减少阴影 -->
+    <!-- diffuse="0.5 0.55 0.6"：漫反射光强度（冷色调） -->
+    <!-- specular="0.3 0.3 0.3"：镜面反射光强度 -->
+    <!-- pos="-40 -15 30"：光源位置 -->
+    <!-- dir="0.7 0.5 -1"：光源方向向量 -->
+    <!-- castshadow="false"：禁用阴影投射 -->
+    <light directional="true" diffuse="0.5 0.55 0.6" specular="0.3 0.3 0.3" pos="-40 -15 30" dir="0.7 0.5 -1" castshadow="false"/>
+
+    <!-- 室内顶部光源：模拟茶室内部照明 -->
+    <!-- directional="false"：点光源，向四周均匀发光 -->
+    <!-- diffuse="1.0 0.95 0.85"：漫反射光强度（暖白色） -->
+    <!-- specular="0.4 0.4 0.3"：镜面反射光强度 -->
+    <!-- pos="-20 0 5.5"：光源位置（茶室顶部） -->
+    <!-- dir="0 0 -1"：光源方向（向下） -->
+    <!-- castshadow="false"：禁用阴影投射 -->
+    <!-- cutoff="80"：光源截止角度80度 -->
+    <light directional="false" diffuse="1.0 0.95 0.85" specular="0.4 0.4 0.3" pos="-20 0 5.5" dir="0 0 -1" castshadow="false" cutoff="80"/>
+
+    <!-- ========== 地面设置 ========== -->
+    <!-- 地面几何体：茶室场景的基础地面 -->
+    <!-- name="ground"：地面名称 -->
+    <!-- type="plane"：平面类型几何体 -->
+    <!-- size="50 50 0.1"：平面尺寸（50x50米，厚度0.1米） -->
+    <!-- material="grass_mat"：使用草地材质 -->
+    <!-- condim="3"：接触维度为3，支持完整3D接触 -->
+    <!-- friction="1 0.5 0.005"：摩擦系数 -->
+    <geom name="ground" type="plane" size="50 50 0.1" material="grass_mat" condim="3" friction="1 0.5 0.005"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    <!-- ========== 茶室建筑（右侧，玻璃墙设计） ========== -->
+    <!-- 茶室建筑主体：位于场景右侧，采用玻璃墙设计的传统日式茶室 -->
+    <!-- name="teahouse_building"：茶室建筑主体名称 -->
+    <!-- pos="-5 0 0"：建筑位置（X=15, Y=0, Z=0），位于场景右侧 -->
+    <body name="teahouse_building" pos="-5 0 0">
+
+      <!-- 榻榻米地板：茶室内部地面 -->
+      <!-- name="teahouse_floor"：地板几何体名称 -->
+      <!-- type="box"：长方体类型几何体 -->
+      <!-- size="5 4.5 0.2"：地板尺寸（长10米，宽9米，厚度0.1米） -->
+      <!-- pos="0 0 0.1"：地板位置（相对于建筑主体） -->
+      <!-- material="tatami_mat"：使用榻榻米材质 -->
+      <geom name="teahouse_floor" type="box" size="5 4.5 0.1" pos="0 0 0.1" material="tatami_mat"/>
+
+      <!-- ========== 木质框架 - 后墙 ========== -->
+      <!-- 茶室建筑后墙的木质框架结构 -->
+      
+      <!-- 后墙左侧立柱 -->
+      <!-- name="teahouse_back_frame_left"：后墙左侧立柱名称 -->
+      <!-- type="box"：长方体类型几何体 -->
+      <!-- size="0.1 0.1 2.8"：立柱尺寸（0.1x0.1x2.8米） -->
+      <!-- pos="-4.5 -4.5 2.8"：立柱位置（X=-4.5, Y=-4.5, Z=2.8） -->
+      <!-- material="wood_red"：使用红色木材材质 -->
+      <geom name="teahouse_back_frame_left" type="box" size="0.1 0.1 2.8" pos="-4.5 -4.5 2.8" material="wood_red"/>
+      
+      <!-- 后墙右侧立柱 -->
+      <!-- name="teahouse_back_frame_right"：后墙右侧立柱名称 -->
+      <!-- pos="4.5 -4.5 2.8"：立柱位置（X=4.5, Y=-4.5, Z=2.8） -->
+      <geom name="teahouse_back_frame_right" type="box" size="0.1 0.1 2.8" pos="4.5 -4.5 2.8" material="wood_red"/>
+      
+      <!-- 后墙顶部横梁 -->
+      <!-- name="teahouse_back_frame_top"：后墙顶部横梁名称 -->
+      <!-- size="5 0.1 0.1"：横梁尺寸（长10米，宽0.1米，高0.1米） -->
+      <!-- pos="0 -4.5 5.6"：横梁位置（Y=-4.5, Z=5.6） -->
+      <geom name="teahouse_back_frame_top" type="box" size="5 0.1 0.1" pos="0 -4.5 5.6" material="wood_red"/>
+      
+      <!-- 后墙底部横梁 -->
+      <!-- name="teahouse_back_frame_bottom"：后墙底部横梁名称 -->
+      <!-- pos="0 -4.5 0.2"：横梁位置（Y=-4.5, Z=0.2） -->
+      <geom name="teahouse_back_frame_bottom" type="box" size="5 0.1 0.1" pos="0 -4.5 0.2" material="wood_red"/>
+
+      <!-- 木质框架 - 左侧墙 -->
+      <geom name="teahouse_left_frame_front" type="box" size="0.1 0.1 2.8" pos="-5 4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_left_frame_back" type="box" size="0.1 0.1 2.8" pos="-5 -4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_left_frame_top" type="box" size="0.1 4.5 0.1" pos="-5 0 5.6" material="wood_red"/>
+      <geom name="teahouse_left_frame_bottom" type="box" size="0.1 4.5 0.1" pos="-5 0 0.2" material="wood_red"/>
+
+      <!-- 木质框架 - 右侧墙 -->
+      <geom name="teahouse_right_frame_front" type="box" size="0.1 0.1 2.8" pos="5 4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_right_frame_back" type="box" size="0.1 0.1 2.8" pos="5 -4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_right_frame_top" type="box" size="0.1 4.5 0.1" pos="5 0 5.6" material="wood_red"/>
+      <geom name="teahouse_right_frame_bottom" type="box" size="0.1 4.5 0.1" pos="5 0 0.2" material="wood_red"/>
+
+      <!-- 木质框架 - 前墙 -->
+      <geom name="teahouse_front_frame_left" type="box" size="0.1 0.1 2.8" pos="-5 4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_front_frame_right" type="box" size="0.1 0.1 2.8" pos="5 4.5 2.8" material="wood_red"/>
+      <geom name="teahouse_front_frame_top" type="box" size="5 0.1 0.1" pos="0 4.5 5.6" material="wood_red"/>
+      <geom name="teahouse_front_frame_bottom" type="box" size="5 0.1 0.1" pos="0 4.5 0.2" material="wood_red"/>
+
+      <!-- 玻璃墙 - 后墙 -->
+      <geom name="teahouse_back_glass" type="box" size="4.4 0.02 2.7" pos="0 -4.5 2.8" material="glass_clear"/>
+
+      <!-- 玻璃墙 - 左侧 -->
+      <geom name="teahouse_left_glass" type="box" size="0.02 4.4 2.7" pos="-5 0 2.8" material="glass_clear"/>
+
+      <!-- 玻璃墙 - 右侧 -->
+      <geom name="teahouse_right_glass" type="box" size="0.02 4.4 2.7" pos="5 0 2.8" material="glass_clear"/>
+
+      <!-- 玻璃墙 - 前墙左侧 -->
+      <geom name="teahouse_front_glass_left" type="box" size="1.8 0.02 2.7" pos="-3 4.5 2.8" material="glass_clear"/>
+
+      <!-- 玻璃墙 - 前墙右侧 -->
+      <geom name="teahouse_front_glass_right" type="box" size="1.8 0.02 2.7" pos="3 4.5 2.8" material="glass_clear"/>
+
+      <!-- 平顶屋顶 -->
+      <geom name="teahouse_roof" type="box" size="5.2 4.7 0.15" pos="0 0 5.75" material="wood_red"/>
+
+      <!-- 室内顶部温馨灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.85 0.6" specular="0.3 0.2 0.1" pos="0 0 5.2" dir="0 0 -1" castshadow="false" cutoff="70"/>
+
+    </body>
+
+
+
+    <!-- 门口地毯 -->
+    <geom name="entrance_carpet" type="box" size="1 1 0.01" pos="-5 4.5 0.03" rgba="0.5 0.3 0.3 0.8"/>
+    
+    <!-- 大门右侧的植物 -->
+    <body name="entrance_plant_right" pos="-3.4 3.9 0.2">
+      <geom name="entrance_plant_pot_right" type="cylinder" size="0.2 0.3" pos="0 0 0.15" material="pottery"/>
+      
+      
+      <!-- 自然形状的叶子 - 使用椭圆代替矩形 -->
+      <!-- 第一根茎的叶子 -->
+      <geom name="entrance_leaf1_right" type="cylinder" size="0.15 0.25" pos="0.12 0.08 0.7" quat="0.383 0.1 0.924 0" rgba="0.2 0.7 0.3 1"/>
+      <geom name="entrance_leaf2_right" type="cylinder" size="0.12 0.22" pos="0.15 0.03 0.9" quat="0.45 0.2 0.88 0" rgba="0.25 0.65 0.25 1"/>
+      <geom name="entrance_leaf3_right" type="cylinder" size="0.14 0.24" pos="0.1 0.12 1.1" quat="0.3 0 0.95 0" rgba="0.2 0.6 0.3 1"/>
+      
+      <!-- 第二根茎的叶子 -->
+      <geom name="entrance_leaf4_right" type="cylinder" size="0.13 0.23" pos="-0.12 -0.05 0.75" quat="0.924 -0.1 -0.383 0" rgba="0.22 0.68 0.28 1"/>
+      <geom name="entrance_leaf5_right" type="cylinder" size="0.11 0.2" pos="-0.08 -0.08 0.95" quat="0.85 -0.2 -0.52 0" rgba="0.18 0.7 0.32 1"/>
+      <geom name="entrance_leaf6_right" type="cylinder" size="0.13 0.22" pos="-0.15 -0.02 1.15" quat="0.88 -0.15 -0.47 0" rgba="0.25 0.65 0.25 1"/>
+      
+      <!-- 第三根茎的叶子 -->
+      <geom name="entrance_leaf7_right" type="cylinder" size="0.12 0.2" pos="0.05 -0.12 0.65" quat="0 0.383 0 0.924" rgba="0.2 0.65 0.27 1"/>
+      <geom name="entrance_leaf8_right" type="cylinder" size="0.1 0.18" pos="0.08 -0.08 0.85" quat="0.1 0.45 0 0.89" rgba="0.22 0.7 0.3 1"/>
+      
+      <!-- 自然开放的花朵 -->
+      <geom name="entrance_flower1_right" type="sphere" size="0.08" pos="0.18 0.1 1.0" rgba="1 0.2 0.2 1"/>
+      <geom name="entrance_flower2_right" type="sphere" size="0.07" pos="0.12 0.15 1.2" rgba="1 0.1 0.15 1"/>
+      <geom name="entrance_flower3_right" type="sphere" size="0.09" pos="-0.15 0 1.1" rgba="0.95 0.15 0.25 1"/>
+      <geom name="entrance_flower4_right" type="sphere" size="0.06" pos="-0.08 0.05 1.3" rgba="1 0.1 0.1 1"/>
+    </body>
+    
+    <!-- 大门左侧的植物 -->
+    <body name="entrance_plant_left" pos="-6.6 3.9 0.2">
+      <geom name="entrance_plant_pot_left" type="cylinder" size="0.2 0.3" pos="0 0 0.15" material="pottery"/>
+      
+      
+      <!-- 自然形状的叶子 - 使用椭圆代替矩形 -->
+      <!-- 第一根茎的叶子 -->
+      <geom name="entrance_leaf1_left" type="cylinder" size="0.15 0.25" pos="0.12 0.08 0.7" quat="0.383 0.1 0.924 0" rgba="0.2 0.7 0.3 1"/>
+      <geom name="entrance_leaf2_left" type="cylinder" size="0.12 0.22" pos="0.15 0.03 0.9" quat="0.45 0.2 0.88 0" rgba="0.25 0.65 0.25 1"/>
+      <geom name="entrance_leaf3_left" type="cylinder" size="0.14 0.24" pos="0.1 0.12 1.1" quat="0.3 0 0.95 0" rgba="0.2 0.6 0.3 1"/>
+      
+      <!-- 第二根茎的叶子 -->
+      <geom name="entrance_leaf4_left" type="cylinder" size="0.13 0.23" pos="-0.12 -0.05 0.75" quat="0.924 -0.1 -0.383 0" rgba="0.22 0.68 0.28 1"/>
+      <geom name="entrance_leaf5_left" type="cylinder" size="0.11 0.2" pos="-0.08 -0.08 0.95" quat="0.85 -0.2 -0.52 0" rgba="0.18 0.7 0.32 1"/>
+      <geom name="entrance_leaf6_left" type="cylinder" size="0.13 0.22" pos="-0.15 -0.02 1.15" quat="0.88 -0.15 -0.47 0" rgba="0.25 0.65 0.25 1"/>
+      
+      <!-- 第三根茎的叶子 -->
+      <geom name="entrance_leaf7_left" type="cylinder" size="0.12 0.2" pos="0.05 -0.12 0.65" quat="0 0.383 0 0.924" rgba="0.2 0.65 0.27 1"/>
+      <geom name="entrance_leaf8_left" type="cylinder" size="0.1 0.18" pos="0.08 -0.08 0.85" quat="0.1 0.45 0 0.89" rgba="0.22 0.7 0.3 1"/>
+      
+      <!-- 自然开放的花朵 -->
+      <geom name="entrance_flower1_left" type="sphere" size="0.08" pos="0.18 0.1 1.0" rgba="1 0.2 0.2 1"/>
+      <geom name="entrance_flower2_left" type="sphere" size="0.07" pos="0.12 0.15 1.2" rgba="1 0.1 0.15 1"/>
+      <geom name="entrance_flower3_left" type="sphere" size="0.09" pos="-0.15 0 1.1" rgba="0.95 0.15 0.25 1"/>
+      <geom name="entrance_flower4_left" type="sphere" size="0.06" pos="-0.08 0.05 1.3" rgba="1 0.1 0.1 1"/>
+    </body>
+
+
+
+
+
+    <!-- ========== 茶室内部装饰 ========== -->
+
+    <!-- 中式屏风 -->
+    <body name="teahouse_screen" pos="-5 -3.6 0.2">
+      <!-- 屏风框架 -->
+      <geom name="screen_frame_left" type="box" size="0.05 0.05 1.8" pos="-1.2 0 1.8" material="wood_dark"/>
+      <geom name="screen_frame_right" type="box" size="0.05 0.05 1.8" pos="1.2 0 1.8" material="wood_dark"/>
+      <geom name="screen_frame_top" type="box" size="1.2 0.05 0.05" pos="0 0 3.55" material="wood_dark"/>
+      <!-- 屏风纸面 - 金色花纹 -->
+      <geom name="screen_panel" type="box" size="1.15 0.02 1.7" pos="0 0 1.8" material="fabric_gold"/>
+    </body>
+
+    <!-- 大书架 - 屏风后面 -->
+    <body name="teahouse_bookshelf" pos="-5 -4.3 0">
+      <!-- 书架主体 -->
+      <geom name="teashelf_back" type="box" size="4 0.05 2.3" pos="0 0.1 2.5" material="wood_shelf" />
+      <geom name="teashelf_left" type="box" size="0.05 0.2 2.3" pos="-4 0.25 2.5" material="wood_shelf" />
+      <geom name="teashelf_right" type="box" size="0.05 0.2 2.3" pos="4 0.25 2.5" material="wood_shelf" />
+      <geom name="teashelf_top" type="box" size="4 0.2 0.05" pos="0 0.25 4.75" material="wood_shelf" />
+      <geom name="teashelf_bottom" type="box" size="4 0.2 0.05" pos="0 0.25 0.25" material="wood_beige" />
+
+      <!-- 层板 -->
+      <geom name="teashelf_layer1" type="box" size="4 0.2 0.03" pos="0 0.25 0.87" material="wood_shelf" />
+      <geom name="teashelf_layer2" type="box" size="4 0.2 0.03" pos="0 0.25 1.87" material="wood_shelf" />
+      <geom name="teashelf_layer3" type="box" size="4 0.2 0.03" pos="0 0.25 2.87" material="wood_shelf" />
+      <geom name="teashelf_layer4" type="box" size="4 0.2 0.03" pos="0 0.25 3.87" material="wood_shelf" />
+
+      <!-- 底层物品 -->
+      <!-- 茶桶 -->
+      <geom name="tea_caddy1" type="cylinder" size="0.2 0.25" pos="-3 0.25 0.4" material="wood_dark" />
+      <geom name="tea_caddy2" type="cylinder" size="0.18 0.22" pos="-2 0.25 0.37" material="wood_light" />
+      <!-- 大茶具套装 -->
+      <geom name="tea_set1" type="box" size="0.3 0.1 0.2" pos="-1 0.25 0.35" material="pottery" />
+      <!-- 书籍 -->
+      <geom name="book_bottom1" type="box" size="0.15 0.1 0.2" pos="0 0.25 0.35" material="book_red" />
+      <geom name="book_bottom2" type="box" size="0.12 0.1 0.2" pos="0.2 0.25 0.35" material="book_blue" />
+      <geom name="book_bottom3" type="box" size="0.14 0.1 0.2" pos="0.4 0.25 0.35" material="book_green" />
+      <!-- 花瓶 -->
+      <geom name="vase_bottom" type="cylinder" size="0.1 0.2" pos="1 0.25 0.37" material="pottery" />
+      <geom name="vase_bottom_top" type="cylinder" size="0.08 0.02" pos="1 0.25 0.52" material="pottery" />
+      <!-- 茶桶 -->
+      <geom name="tea_caddy3" type="cylinder" size="0.2 0.28" pos="2 0.25 0.42" material="wood_red" />
+      <geom name="tea_caddy4" type="cylinder" size="0.15 0.2" pos="2.8 0.25 0.35" material="wood_dark" />
+
+      <!-- 第一层物品 -->
+      <!-- 书籍 -->
+      <geom name="book1_1" type="box" size="0.18 0.1 0.2" pos="-3.5 0.25 1.1" material="book_brown" />
+      <geom name="book1_2" type="box" size="0.15 0.1 0.2" pos="-3.2 0.25 1.1" material="book_yellow" />
+      <geom name="book1_3" type="box" size="0.16 0.1 0.2" pos="-2.9 0.25 1.1" material="book_purple" />
+      <!-- 茶具 -->
+      <geom name="teapot1" type="sphere" size="0.15" pos="-2 0.25 1.05" rgba="0.3 0.25 0.2 1" />
+      <geom name="teapot1_spout" type="cylinder" size="0.02 0.08" pos="-1.85 0.25 1.1" quat="0.707 0 0.707 0" rgba="0.3 0.25 0.2 1" />
+      <geom name="teapot1_handle" type="cylinder" size="0.015 0.08" pos="-2.15 0.25 1.15" quat="0.707 0 -0.707 0" rgba="0.3 0.25 0.2 1" />
+      <!-- 茶杯 -->
+      <geom name="teacup1" type="cylinder" size="0.06 0.08" pos="-1.2 0.25 0.98" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup2" type="cylinder" size="0.06 0.08" pos="-1 0.25 0.98" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup3" type="cylinder" size="0.06 0.08" pos="-0.8 0.25 0.98" rgba="0.9 0.95 1 0.8" />
+      <!-- 书籍 -->
+      <geom name="book1_4" type="box" size="0.14 0.1 0.2" pos="0 0.25 1.1" material="book_red" />
+      <geom name="book1_5" type="box" size="0.13 0.1 0.2" pos="0.2 0.25 1.1" material="book_blue" />
+      <geom name="book1_6" type="box" size="0.15 0.1 0.2" pos="0.4 0.25 1.1" material="book_green" />
+      <!-- 花瓶 -->
+      <geom name="teashelf_vase1" type="cylinder" size="0.12 0.25" pos="1.2 0.25 1.1" material="pottery" />
+      <geom name="teashelf_vase1_top" type="cylinder" size="0.1 0.02" pos="1.2 0.25 1.35" material="pottery" />
+      <!-- 书籍 -->
+      <geom name="book1_7" type="box" size="0.1 0.14 0.2" pos="2 0.3 1.1" material="book_brown" />
+      <geom name="book1_8" type="box" size="0.1 0.14 0.2" pos="2.2 0.3 1.1" material="book_yellow" />
+      <geom name="book1_9" type="box" size="0.1 0.14 0.2" pos="2.4 0.3 1.1" material="book_purple" />
+      <geom name="book1_10" type="box" size="0.1 0.14 0.2" pos="2.6 0.3 1.1" material="book_red" />
+      <geom name="book1_11" type="box" size="0.1 0.14 0.2" pos="2.8 0.3 1.1" material="book_blue" />
+      <geom name="book1_12" type="box" size="0.1 0.14 0.2" pos="3.0 0.3 1.1" material="book_green" />
+
+      <!-- 第二层物品 -->
+      <!-- 花瓶 -->
+      <geom name="teashelf_vase2" type="cylinder" size="0.15 0.25" pos="-3.2 0.3 2.1" material="pottery" />
+      <geom name="teashelf_vase2_top" type="cylinder" size="0.11 0.015" pos="-3.2 0.3 2.365" material="pottery" />
+      <!-- 茶具套装 -->
+      <geom name="tea_set2" type="box" size="0.3 0.15 0.2" pos="-2.2 0.25 2.1" material="pottery" />
+      <!-- 书籍 -->
+      <geom name="book2_1" type="box" size="0.15 0.15 0.2" pos="-1.5 0.25 2.1" material="book_red" />
+      <geom name="book2_2" type="box" size="0.13 0.15 0.2" pos="-1.2 0.25 2.1" material="book_blue" />
+      <geom name="book2_3" type="box" size="0.14 0.15 0.2" pos="-1.0 0.25 2.1" material="book_green" />
+      <!-- 茶壶 -->
+      <geom name="teapot2" type="sphere" size="0.15" pos="-0.2 0.3 2.05" rgba="0.7 0.6 0.5 1" />
+      <geom name="teashelf_teapot2_spout" type="cylinder" size="0.025 0.1" pos="0 0.25 1.95" quat="0.707 0 0.707 0" rgba="0.7 0.6 0.5 1" />
+      <geom name="teashelf_teapot2_handle" type="cylinder" size="0.02 0.1" pos="-0.4 0.25 2.15" quat="0.707 0 -0.707 0" rgba="0.7 0.6 0.5 1" />
+      <!-- 茶杯 -->
+      <geom name="teacup4" type="cylinder" size="0.07 0.09" pos="0.8 0.25 2" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup5" type="cylinder" size="0.07 0.09" pos="1.0 0.25 2" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup6" type="cylinder" size="0.07 0.09" pos="1.2 0.25 2" rgba="0.9 0.95 1 0.8" />
+      <!-- 书籍 -->
+      <geom name="book2_4" type="box" size="0.16 0.1 0.2" pos="2.0 0.25 2.1" material="book_brown" />
+      <geom name="book2_5" type="box" size="0.14 0.1 0.2" pos="2.2 0.25 2.1" material="book_yellow" />
+      <geom name="book2_6" type="box" size="0.17 0.1 0.2" pos="2.4 0.25 2.1" material="book_purple" />
+      <geom name="book2_7" type="box" size="0.15 0.1 0.2" pos="2.6 0.25 2.1" material="book_red" />
+      <geom name="book2_8" type="box" size="0.13 0.1 0.2" pos="2.8 0.25 2.1" material="book_blue" />
+      <geom name="book2_9" type="box" size="0.14 0.1 0.2" pos="3.0 0.25 2.1" material="book_green" />
+
+      <!-- 第三层物品 -->
+      <!-- 书籍 -->
+      <geom name="book3_1" type="box" size="0.18 0.1 0.2" pos="-3.5 0.25 3.1" material="book_brown" />
+      <geom name="book3_2" type="box" size="0.15 0.1 0.2" pos="-3.2 0.25 3.1" material="book_yellow" />
+      <geom name="book3_3" type="box" size="0.16 0.1 0.2" pos="-2.9 0.25 3.1" material="book_purple" />
+      <geom name="book3_4" type="box" size="0.14 0.1 0.2" pos="-2.6 0.25 3.1" material="book_red" />
+      <!-- 茶壶 -->
+      <geom name="teapot3" type="sphere" size="0.2" pos="-1.8 0.25 3.1" rgba="0.3 0.2 0.15 1" />
+      <geom name="teashelf_teapot3_spout" type="cylinder" size="0.03 0.12" pos="-1.6 0.25 3.1" quat="0.707 0 0.707 0" rgba="0.3 0.2 0.15 1" />
+      <geom name="teashelf_teapot3_handle" type="cylinder" size="0.025 0.12" pos="-2.0 0.25 3.2" quat="0.707 0 -0.707 0" rgba="0.3 0.2 0.15 1" />
+      <!-- 书籍 -->
+      <geom name="book3_5" type="box" size="0.15 0.1 0.2" pos="-1.0 0.25 3.1" material="book_blue" />
+      <geom name="book3_6" type="box" size="0.13 0.1 0.2" pos="-0.7 0.25 3.1" material="book_green" />
+      <geom name="book3_7" type="box" size="0.14 0.1 0.2" pos="-0.4 0.25 3.1" material="book_brown" />
+      <!-- 花瓶 -->
+      <geom name="vase3" type="cylinder" size="0.15 0.255" pos="0.4 0.32 3.15" material="pottery" />
+      <geom name="vase3_top" type="cylinder" size="0.12 0.02" pos="0.4 0.32 3.42" material="pottery" />
+      <!-- 书籍 -->
+      <geom name="book3_8" type="box" size="0.1 0.1 0.2" pos="1.2 0.25 3.1" material="book_yellow" />
+      <geom name="book3_9" type="box" size="0.1 0.1 0.2" pos="1.4 0.25 3.1" material="book_purple" />
+      <geom name="book3_10" type="box" size="0.1 0.1 0.2" pos="1.6 0.25 3.1" material="book_red" />
+      <geom name="book3_11" type="box" size="0.1 0.1 0.2" pos="1.8 0.25 3.1" material="book_blue" />
+      <geom name="book3_12" type="box" size="0.1 0.1 0.2" pos="2.0 0.25 3.1" material="book_green" />
+      <geom name="book3_13" type="box" size="0.1 0.1 0.2" pos="2.2 0.25 3.1" material="book_brown" />
+      <geom name="book3_14" type="box" size="0.1 0.1 0.2" pos="2.4 0.25 3.1" material="book_yellow" />
+      <geom name="book3_15" type="box" size="0.1 0.1 0.2" pos="2.6 0.25 3.1" material="book_purple" />
+      <geom name="book3_16" type="box" size="0.1 0.1 0.2" pos="2.8 0.25 3.1" material="book_red" />
+      <geom name="book3_17" type="box" size="0.1 0.1 0.2" pos="3.0 0.25 3.1" material="book_blue" />
+
+      <!-- 第四层物品 -->
+      <!-- 小型装饰品 -->
+      <geom name="decor1" type="sphere" size="0.1" pos="-3.2 0.25 4" material="pottery" />
+      <geom name="decor2" type="cylinder" size="0.08 0.15" pos="-2.8 0.25 4" material="wood_dark" />
+      <!-- 茶杯 -->
+      <geom name="teacup7" type="cylinder" size="0.08 0.1" pos="-2.0 0.25 4" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup8" type="cylinder" size="0.08 0.1" pos="-1.7 0.25 4" rgba="0.9 0.95 1 0.8" />
+      <geom name="teacup9" type="cylinder" size="0.08 0.1" pos="-1.4 0.25 4" rgba="0.9 0.95 1 0.8" />
+      <!-- 书籍 -->
+      <geom name="book4_1" type="box" size="0.15 0.1 0.2" pos="-0.6 0.25 4.1" material="book_green" />
+      <geom name="book4_2" type="box" size="0.13 0.1 0.2" pos="-0.3 0.25 4.1" material="book_brown" />
+      <geom name="book4_3" type="box" size="0.14 0.1 0.2" pos="0.0 0.25 4.1" material="book_yellow" />
+      <!-- 小茶壶 -->
+      <geom name="teapot4" type="sphere" size="0.12" pos="0.8 0.32 4.02" rgba="0.7 0.6 0.5 1" />
+      <geom name="teapot4_spout" type="cylinder" size="0.02 0.06" pos="0.92 0.32 4" quat="0.707 0 0.707 0" rgba="0.7 0.6 0.5 1" />
+      <geom name="teapot4_handle" type="cylinder" size="0.015 0.06" pos="0.68 0.25 4" quat="0.707 0 -0.707 0" rgba="0.7 0.6 0.5 1" />
+      <!-- 书籍 -->
+      <geom name="book4_4" type="box" size="0.1 0.1 0.2" pos="1.6 0.25 4.1" material="book_purple" />
+      <geom name="book4_5" type="box" size="0.1 0.1 0.2" pos="1.8 0.25 4.1" material="book_red" />
+      <geom name="book4_6" type="box" size="0.1 0.1 0.2" pos="2.0 0.25 4.1" material="book_blue" />
+      <geom name="book4_7" type="box" size="0.1 0.1 0.2" pos="2.2 0.25 4.1" material="book_green" />
+      <geom name="book4_8" type="box" size="0.1 0.1 0.2" pos="2.4 0.25 4.1" material="book_brown" />
+      <geom name="book4_9" type="box" size="0.1 0.1 0.2" pos="2.6 0.25 4.1" material="book_yellow" />
+      <geom name="book4_10" type="box" size="0.1 0.1 0.2" pos="2.8 0.25 4.1" material="book_purple" />
+      <geom name="book4_11" type="box" size="0.1 0.1 0.2" pos="3.0 0.25 4.1" material="book_red" />
+    </body>
+
+    <!-- ========== 榻榻米座位区域（中央） ========== -->
+    <!-- 榻榻米平台1 -->
+    <body name="tatami_platform_1" pos="-5 1 0.2">
+      <geom name="tatami_mat_1" type="box" size="2 1.5 0.05" pos="0 0 0.05" material="tatami_mat"/>
+      <!-- 座垫围绕茶桌 -->
+      <geom name="cushion_t1_1" type="cylinder" size="0.25 0.08" pos="-1.1 0.6 0.13" material="fabric_red"/>
+      <geom name="cushion_t1_2" type="cylinder" size="0.25 0.08" pos="1.1 0.6 0.13" material="fabric_blue"/>
+      <geom name="cushion_t1_3" type="cylinder" size="0.25 0.08" pos="-1.1 -0.6 0.13" material="fabric_beige"/>
+      <geom name="cushion_t1_4" type="cylinder" size="0.25 0.08" pos="1.1 -0.6 0.13" material="fabric_gold"/>
+      <geom name="cushion_t1_5" type="cylinder" size="0.25 0.08" pos="0 1.1 0.13" material="fabric_red"/>
+      <geom name="cushion_t1_6" type="cylinder" size="0.25 0.08" pos="0 -1.1 0.13" material="fabric_blue"/>
+    </body>
+
+    <!-- 茶桌1（低矮的传统茶桌 - 榻榻米平台上） -->
+    <body name="tea_table_1" pos="-5 1 0.3">
+      <geom name="tea_table1_top" type="box" size="0.8 0.6 0.04" pos="0 0 0.35" material="wood_dark"/>
+      <geom name="tea_table1_leg1" type="cylinder" size="0.04 0.175" pos="-0.6 -0.4 0.175" material="wood_dark"/>
+      <geom name="tea_table1_leg2" type="cylinder" size="0.04 0.175" pos="0.6 -0.4 0.175" material="wood_dark"/>
+      <geom name="tea_table1_leg3" type="cylinder" size="0.04 0.175" pos="-0.6 0.4 0.175" material="wood_dark"/>
+      <geom name="tea_table1_leg4" type="cylinder" size="0.04 0.175" pos="0.6 0.4 0.175" material="wood_dark"/>
+
+      <!-- 茶具套装1 - 茶壶 -->
+      <geom name="teapot_body" type="sphere" size="0.12" pos="0 0 0.5" rgba="0.3 0.25 0.2 1"/>
+      <geom name="teapot_spout" type="cylinder" size="0.02 0.08" pos="0.12 0 0.5" quat="0.707 0 0.707 0" rgba="0.3 0.25 0.2 1"/>
+      <geom name="teapot_handle" type="cylinder" size="0.015 0.08" pos="-0.12 0 0.55" quat="0.707 0 -0.707 0" rgba="0.3 0.25 0.2 1"/>
+      <geom name="teapot_lid" type="cylinder" size="0.06 0.02" pos="0 0 0.62" rgba="0.35 0.3 0.25 1"/>
+
+      <!-- 茶杯1 -->
+      <geom name="teacup_1" type="cylinder" size="0.035 0.05" pos="-0.3 0.2 0.43" rgba="0.9 0.95 1 0.8"/>
+      <geom name="teacup_1_tea" type="cylinder" size="0.03 0.04" pos="-0.3 0.2 0.43" rgba="0.4 0.6 0.3 0.7"/>
+
+      <!-- 茶杯2 -->
+      <geom name="teacup_2" type="cylinder" size="0.035 0.05" pos="0.3 0.2 0.43" rgba="0.9 0.95 1 0.8"/>
+      <geom name="teacup_2_tea" type="cylinder" size="0.03 0.04" pos="0.3 0.2 0.43" rgba="0.4 0.6 0.3 0.7"/>
+
+      <!-- 茶杯3 -->
+      <geom name="teacup_3" type="cylinder" size="0.035 0.05" pos="-0.3 -0.2 0.43" rgba="0.9 0.95 1 0.8"/>
+      <geom name="teacup_3_tea" type="cylinder" size="0.03 0.04" pos="-0.3 -0.2 0.43" rgba="0.4 0.6 0.3 0.7"/>
+
+      <!-- 茶杯4 -->
+      <geom name="teacup_4" type="cylinder" size="0.035 0.05" pos="0.3 -0.2 0.43" rgba="0.9 0.95 1 0.8"/>
+      <geom name="teacup_4_tea" type="cylinder" size="0.03 0.04" pos="0.3 -0.2 0.43" rgba="0.4 0.6 0.3 0.7"/>
+
+      <!-- 茶盘 -->
+      <geom name="tea_tray" type="box" size="0.5 0.35 0.02" pos="0 0 0.41" rgba="0.35 0.25 0.2 1"/>
+
+      <!-- 茶托 -->
+      <geom name="tea_saucer_1" type="cylinder" size="0.045 0.005" pos="-0.3 0.2 0.42" rgba="0.4 0.35 0.3 1"/>
+      <geom name="tea_saucer_2" type="cylinder" size="0.045 0.005" pos="0.3 0.2 0.42" rgba="0.4 0.35 0.3 1"/>
+      <geom name="tea_saucer_3" type="cylinder" size="0.045 0.005" pos="-0.3 -0.2 0.42" rgba="0.4 0.35 0.3 1"/>
+      <geom name="tea_saucer_4" type="cylinder" size="0.045 0.005" pos="0.3 -0.2 0.42" rgba="0.4 0.35 0.3 1"/>
+    </body>
+
+    <!-- ========== 榻榻米座位区域2（左侧） ========== -->
+    <!-- 榻榻米平台2 -->
+    <body name="tatami_platform_2" pos="-8 -1 0.2">
+      <geom name="tatami_mat_2" type="box" size="1.5 1.2 0.05" pos="0 0 0.05" material="tatami_mat"/>
+      <!-- 座垫 -->
+      <geom name="cushion_t2_1" type="cylinder" size="0.25 0.08" pos="-0.8 0.6 0.13" material="fabric_beige"/>
+      <geom name="cushion_t2_2" type="cylinder" size="0.25 0.08" pos="0.8 0.6 0.13" material="fabric_gold"/>
+      <geom name="cushion_t2_3" type="cylinder" size="0.25 0.08" pos="-0.8 -0.6 0.13" material="fabric_red"/>
+      <geom name="cushion_t2_4" type="cylinder" size="0.25 0.08" pos="0.8 -0.6 0.13" material="fabric_blue"/>
+    </body>
+
+    <!-- 茶桌2（左侧区域） -->
+    <body name="tea_table_2" pos="-8 -1 0.3">
+      <geom name="tea_table2_top" type="box" size="0.7 0.5 0.04" pos="0 0 0.35" material="wood_dark"/>
+      <geom name="tea_table2_leg1" type="cylinder" size="0.04 0.175" pos="-0.5 -0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table2_leg2" type="cylinder" size="0.04 0.175" pos="0.5 -0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table2_leg3" type="cylinder" size="0.04 0.175" pos="-0.5 0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table2_leg4" type="cylinder" size="0.04 0.175" pos="0.5 0.35 0.175" material="wood_dark"/>
+
+      <!-- 茶叶罐 -->
+      <geom name="tea_container_1" type="cylinder" size="0.08 0.15" pos="-0.3 0 0.54" rgba="0.2 0.3 0.5 1"/>
+      <geom name="tea_container_1_lid" type="cylinder" size="0.09 0.02" pos="-0.3 0 0.69" rgba="0.25 0.35 0.55 1"/>
+
+      <!-- 茶叶罐2 -->
+      <geom name="tea_container_2" type="cylinder" size="0.08 0.15" pos="0.3 0 0.54" rgba="0.5 0.3 0.2 1"/>
+      <geom name="tea_container_2_lid" type="cylinder" size="0.09 0.02" pos="0.3 0 0.69" rgba="0.55 0.35 0.25 1"/>
+
+      <!-- 茶壶2 -->
+      <geom name="teapot2_body" type="sphere" size="0.1" pos="0 -0.2 0.48" rgba="0.6 0.5 0.4 1"/>
+      <geom name="teapot2_spout" type="cylinder" size="0.015 0.06" pos="0.1 -0.2 0.48" quat="0.707 0 0.707 0" rgba="0.6 0.5 0.4 1"/>
+      <geom name="teapot2_lid" type="cylinder" size="0.05 0.015" pos="0 -0.2 0.58" rgba="0.65 0.55 0.45 1"/>
+    </body>
+
+    <!-- ========== 榻榻米座位区域3（右侧） ========== -->
+    <!-- 榻榻米平台3 -->
+    <body name="tatami_platform_3" pos="-2 -1 0.2">
+      <geom name="tatami_mat_3" type="box" size="1.5 1.2 0.05" pos="0 0 0.05" material="tatami_mat"/>
+      <!-- 座垫 -->
+      <geom name="cushion_t3_1" type="cylinder" size="0.25 0.08" pos="-0.8 0.6 0.13" material="fabric_red"/>
+      <geom name="cushion_t3_2" type="cylinder" size="0.25 0.08" pos="0.8 0.6 0.13" material="fabric_blue"/>
+      <geom name="cushion_t3_3" type="cylinder" size="0.25 0.08" pos="-0.8 -0.6 0.13" material="fabric_beige"/>
+      <geom name="cushion_t3_4" type="cylinder" size="0.25 0.08" pos="0.8 -0.6 0.13" material="fabric_gold"/>
+    </body>
+
+    <!-- ========== 中央茶桌右侧小房间（透光小屏风） ========== -->
+    <!-- 透光小屏风1 -->
+    <body name="center_screen_1" pos="-2.5 2.5 0.2" quat="0.7071 0 0 0.7071">
+      <geom name="center_screen1_frame_left" type="box" size="0.05 0.05 2" pos="-1.2 0 2" material="wood_dark"/>
+      <geom name="center_screen1_frame_right" type="box" size="0.05 0.05 2" pos="1.2 0 2" material="wood_dark"/>
+      <geom name="center_screen1_frame_top" type="box" size="1.2 0.05 0.05" pos="0 0 4" material="wood_dark"/>
+      <geom name="center_screen1_panel" type="box" size="1.15 0.02 1.9" pos="0 0 2" material="paper_red"/>
+    </body>
+    
+    <!-- 透光小屏风2 -->
+    <body name="center_screen_2" pos="-1.5 0.5 0.2">
+      <geom name="center_screen2_frame_left" type="box" size="0.05 0.05 2" pos="-1.2 0 2" material="wood_dark"/>
+      <geom name="center_screen2_frame_right" type="box" size="0.05 0.05 2" pos="1.2 0 2" material="wood_dark"/>
+      <geom name="center_screen2_frame_top" type="box" size="1.2 0.05 0.05" pos="0 0 4" material="wood_dark"/>
+      <geom name="center_screen2_panel" type="box" size="1.15 0.02 1.9" pos="0 0 2" material="paper_red"/>
+    </body>
+    
+
+
+    <!-- 茶桌3（右侧区域） -->
+    <body name="tea_table_3" pos="-2 -1 0.3">
+      <geom name="tea_table3_top" type="box" size="0.7 0.5 0.04" pos="0 0 0.35" material="wood_dark"/>
+      <geom name="tea_table3_leg1" type="cylinder" size="0.04 0.175" pos="-0.5 -0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table3_leg2" type="cylinder" size="0.04 0.175" pos="0.5 -0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table3_leg3" type="cylinder" size="0.04 0.175" pos="-0.5 0.35 0.175" material="wood_dark"/>
+      <geom name="tea_table3_leg4" type="cylinder" size="0.04 0.175" pos="0.5 0.35 0.175" material="wood_dark"/>
+
+      <!-- 茶具套装3 -->
+      <!-- 紫砂壶 -->
+      <geom name="teapot3_body" type="sphere" size="0.11" pos="0 0 0.49" rgba="0.4 0.25 0.25 1"/>
+      <geom name="teapot3_spout" type="cylinder" size="0.018 0.07" pos="0.11 0 0.49" quat="0.707 0 0.707 0" rgba="0.4 0.25 0.25 1"/>
+      <geom name="teapot3_lid" type="cylinder" size="0.055 0.018" pos="0 0 0.6" rgba="0.45 0.3 0.3 1"/>
+
+      <!-- 品茗杯组 -->
+      <geom name="teacup3_1" type="cylinder" size="0.03 0.045" pos="-0.25 0.15 0.425" rgba="0.95 0.9 0.85 1"/>
+      <geom name="teacup3_2" type="cylinder" size="0.03 0.045" pos="0.25 0.15 0.425" rgba="0.95 0.9 0.85 1"/>
+      <geom name="teacup3_3" type="cylinder" size="0.03 0.045" pos="-0.25 -0.15 0.425" rgba="0.95 0.9 0.85 1"/>
+      <geom name="teacup3_4" type="cylinder" size="0.03 0.045" pos="0.25 -0.15 0.425" rgba="0.95 0.9 0.85 1"/>
+
+      <!-- 公道杯 -->
+      <geom name="fair_cup" type="cylinder" size="0.05 0.06" pos="0 -0.25 0.43" rgba="0.9 0.95 1 0.7"/>
+    </body>
+
+
+
+    <!-- 红色纸灯笼1（吊灯） -->
+    <body name="lantern_1" pos="-7 0 5.75">
+      <!-- 吊线 -->
+      <geom name="lantern1_cord" type="cylinder" size="0.008 1.25" pos="0 0 -1.25" rgba="0.6 0.5 0.4 1"/>
+      <!-- 灯笼主体 -->
+      <geom name="lantern1_top" type="cylinder" size="0.15 0.02" pos="0 0 -2.2" material="wood_dark"/>
+      <geom name="lantern1_body" type="cylinder" size="0.18 0.35" pos="0 0 -2.55" material="paper_red"/>
+      <geom name="lantern1_bottom" type="cylinder" size="0.12 0.02" pos="0 0 -2.9" material="wood_dark"/>
+      <!-- 流苏 -->
+      <geom name="lantern1_tassel" type="cylinder" size="0.01 0.15" pos="0 0 -3.05" rgba="0.9 0.7 0.2 1"/>
+      <!-- 灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.6 0.4" specular="0.3 0.2 0.1" pos="0 0 -2.55" dir="0 0 -1" castshadow="false" cutoff="45"/>
+    </body>
+    
+    <!-- 红色纸灯笼2（吊灯） -->
+    <body name="lantern_2" pos="-3 0 5.75">
+      <!-- 吊线 -->
+      <geom name="lantern2_cord" type="cylinder" size="0.008 1.25" pos="0 0 -1.25" rgba="0.6 0.5 0.4 1"/>
+      <!-- 灯笼主体 -->
+      <geom name="lantern2_top" type="cylinder" size="0.15 0.02" pos="0 0 -2.2" material="wood_dark"/>
+      <geom name="lantern2_body" type="cylinder" size="0.18 0.35" pos="0 0 -2.55" material="paper_red"/>
+      <geom name="lantern2_bottom" type="cylinder" size="0.12 0.02" pos="0 0 -2.9" material="wood_dark"/>
+      <!-- 流苏 -->
+      <geom name="lantern2_tassel" type="cylinder" size="0.01 0.15" pos="0 0 -3.05" rgba="0.9 0.7 0.2 1"/>
+      <!-- 灯光 -->
+      <light mode="fixed" directional="false" diffuse="1 0.6 0.4" specular="0.3 0.2 0.1" pos="0 0 -2.55" dir="0 0 -1" castshadow="false" cutoff="45"/>
+    </body>
+
+    <!-- 竹子装饰1（左前角） -->
+    <body name="bamboo_1" pos="-9.5 3.5 0.2">
+      <!-- 竹竿1 -->
+      <geom name="bamboo_stem_1_1" type="cylinder" size="0.04 1.2" pos="0 0 1.2" material="bamboo"/>
+      <geom name="bamboo_stem_1_2" type="cylinder" size="0.035 1" pos="0 0 3.2" material="bamboo"/>
+      <!-- 竹节 -->
+      <geom name="bamboo_node_1_1" type="cylinder" size="0.045 0.03" pos="0 0 2.4" rgba="0.45 0.55 0.3 1"/>
+      <geom name="bamboo_node_1_2" type="cylinder" size="0.04 0.03" pos="0 0 3.8" rgba="0.45 0.55 0.3 1"/>
+      <!-- 竹叶 -->
+      <geom name="bamboo_leaves_1" type="sphere" size="0.3" pos="0 0 4.5" rgba="0.3 0.5 0.2 0.7"/>
+    </body>
+
+    <!-- 竹子装饰2（右前角） -->
+    <body name="bamboo_2" pos="-0.5 3.5 0.2">
+      <!-- 竹竿2 -->
+      <geom name="bamboo_stem_2_1" type="cylinder" size="0.04 1.2" pos="0 0 1.2" material="bamboo"/>
+      <geom name="bamboo_stem_2_2" type="cylinder" size="0.035 1" pos="0 0 3.2" material="bamboo"/>
+      <!-- 竹节 -->
+      <geom name="bamboo_node_2_1" type="cylinder" size="0.045 0.03" pos="0 0 2.4" rgba="0.45 0.55 0.3 1"/>
+      <geom name="bamboo_node_2_2" type="cylinder" size="0.04 0.03" pos="0 0 3.8" rgba="0.45 0.55 0.3 1"/>
+      <!-- 竹叶 -->
+      <geom name="bamboo_leaves_2" type="sphere" size="0.3" pos="0 0 4.5" rgba="0.3 0.5 0.2 0.7"/>
+    </body>
+
+   
+    <!-- ========== 沙发区域（香炉后面） ========== -->
+    <!-- 米色沙发旁边的植物 -->
+    <body name="beige_sofa_plant" pos="-9.2 -3 0.2">
+      <geom name="beige_plant_pot" type="cylinder" size="0.15 0.25" pos="0 0 0.125" material="pottery"/>
+      
+      
+      <!-- 自然下垂的叶子 -->
+      <!-- 第一根茎的叶子 -->
+      <geom name="beige_leaf1" type="cylinder" size="0.12 0.2" pos="0.08 0.05 0.5" quat="0.3 0.1 0.95 0" rgba="0.25 0.65 0.3 1"/>
+      <geom name="beige_leaf2" type="cylinder" size="0.1 0.18" pos="0.1 0.02 0.7" quat="0.35 0.15 0.93 0" rgba="0.2 0.7 0.3 1"/>
+      <geom name="beige_leaf3" type="cylinder" size="0.11 0.19" pos="0.06 0.08 0.85" quat="0.25 0 0.97 0" rgba="0.22 0.68 0.28 1"/>
+      
+      <!-- 第二根茎的叶子 -->
+      <geom name="beige_leaf4" type="cylinder" size="0.11 0.19" pos="-0.09 -0.03 0.55" quat="0.95 -0.1 -0.3 0" rgba="0.2 0.65 0.27 1"/>
+      <geom name="beige_leaf5" type="cylinder" size="0.1 0.17" pos="-0.06 -0.05 0.7" quat="0.9 0.15 -0.42 0" rgba="0.23 0.67 0.29 1"/>
+      <geom name="beige_leaf6" type="cylinder" size="0.11 0.18" pos="-0.11 -0.01 0.8" quat="0.92 -0.1 -0.38 0" rgba="0.19 0.66 0.26 1"/>
+      
+      <!-- 第三根茎的叶子 -->
+      <geom name="beige_leaf7" type="cylinder" size="0.09 0.16" pos="0.05 -0.08 0.5" quat="0 0.35 0 0.94" rgba="0.21 0.64 0.25 1"/>
+      <geom name="beige_leaf8" type="cylinder" size="0.08 0.15" pos="0.07 -0.06 0.65" quat="0 0.4 0 0.92" rgba="0.24 0.69 0.3 1"/>
+      
+      <!-- 小芽 -->
+      <geom name="beige_bud1" type="sphere" size="0.03" pos="0.05 0.05 1.0" rgba="0.3 0.8 0.3 1"/>
+      <geom name="beige_bud2" type="sphere" size="0.025" pos="-0.04 -0.03 0.9" rgba="0.35 0.75 0.35 1"/>
+    </body>
+
+    <!-- 沙发1（左侧） -->
+    <body name="sofa_1" pos="-8 -3 0.2">
+      <!-- 座位 -->
+      <geom name="sofa1_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_beige"/>
+      <!-- 靠背 -->
+      <geom name="sofa1_back" type="box" size="0.8 0.1 0.4" pos="0 -0.4 0.7" material="fabric_beige"/>
+      <!-- 扶手左 -->
+      <geom name="sofa1_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_dark"/>
+      <!-- 扶手右 -->
+      <geom name="sofa1_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_dark"/>
+      <!-- 靠垫 -->
+      <geom name="sofa1_cushion_1" type="box" size="0.15 0.08 0.15" pos="-0.3 -0.35 0.7" material="fabric_red"/>
+      <geom name="sofa1_cushion_2" type="box" size="0.15 0.08 0.15" pos="0.3 -0.35 0.7" material="fabric_gold"/>
+    </body>
+
+    <!-- 棋桌区域 -->
+    <body name="chess_table_area" pos="-8 2.2 0.2">
+      <!-- 棋桌 -->
+      <geom name="chess_table_top" type="box" size="0.8 0.8 0.05" pos="0 0 0.4" material="wood_dark"/>
+      <geom name="chess_table_leg1" type="cylinder" size="0.04 0.2" pos="-0.6 -0.6 0.2" material="wood_dark"/>
+      <geom name="chess_table_leg2" type="cylinder" size="0.04 0.2" pos="0.6 -0.6 0.2" material="wood_dark"/>
+      <geom name="chess_table_leg3" type="cylinder" size="0.04 0.2" pos="-0.6 0.6 0.2" material="wood_dark"/>
+      <geom name="chess_table_leg4" type="cylinder" size="0.04 0.2" pos="0.6 0.6 0.2" material="wood_dark"/>
+      
+      <!-- 深色榻榻米纹路棋盘 -->
+      <geom name="chess_board" type="box" size="0.6 0.6 0.01" pos="0 0 0.43" material="tatami_mat_dark"/>
+      
+      <!-- 棋盘网格线 - 颜色不明显 -->
+      <geom name="chess_grid_h0" type="box" size="0.58 0.01 0.01" pos="0 -0.3 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_h1" type="box" size="0.58 0.01 0.01" pos="0 -0.15 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_h2" type="box" size="0.58 0.01 0.01" pos="0 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_h3" type="box" size="0.58 0.01 0.01" pos="0 0.15 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_h4" type="box" size="0.58 0.01 0.01" pos="0 0.3 0.44" rgba="0.4 0.35 0.25 1"/>
+      
+      <geom name="chess_grid_v0" type="box" size="0.01 0.58 0.01" pos="-0.3 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_v1" type="box" size="0.01 0.58 0.01" pos="-0.15 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_v2" type="box" size="0.01 0.58 0.01" pos="0 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_v3" type="box" size="0.01 0.58 0.01" pos="0.15 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      <geom name="chess_grid_v4" type="box" size="0.01 0.58 0.01" pos="0.3 0 0.44" rgba="0.4 0.35 0.25 1"/>
+      
+      <!-- 黑白棋子 -->
+      <geom name="chess_piece_black_1" type="sphere" size="0.03" pos="-0.22 -0.22 0.45" rgba="0 0 0 1"/>
+      <geom name="chess_piece_black_2" type="sphere" size="0.03" pos="-0.08 -0.22 0.45" rgba="0 0 0 1"/>
+      <geom name="chess_piece_black_3" type="sphere" size="0.03" pos="0.06 -0.22 0.45" rgba="0 0 0 1"/>
+      <geom name="chess_piece_black_4" type="sphere" size="0.03" pos="0.20 -0.22 0.45" rgba="0 0 0 1"/>
+      
+      <geom name="chess_piece_white_1" type="sphere" size="0.03" pos="-0.22 0.22 0.45" rgba="1 1 1 1"/>
+      <geom name="chess_piece_white_2" type="sphere" size="0.03" pos="-0.08 0.22 0.45" rgba="1 1 1 1"/>
+      <geom name="chess_piece_white_3" type="sphere" size="0.03" pos="0.06 0.22 0.45" rgba="1 1 1 1"/>
+      <geom name="chess_piece_white_4" type="sphere" size="0.03" pos="0.20 0.22 0.45" rgba="1 1 1 1"/>
+      
+      <!-- 中间布局 -->
+      <geom name="chess_piece_black_5" type="sphere" size="0.03" pos="-0.08 -0.08 0.45" rgba="0 0 0 1"/>
+      <geom name="chess_piece_black_6" type="sphere" size="0.03" pos="0.06 -0.08 0.45" rgba="0 0 0 1"/>
+      <geom name="chess_piece_white_5" type="sphere" size="0.03" pos="-0.08 0.06 0.45" rgba="1 1 1 1"/>
+      <geom name="chess_piece_white_6" type="sphere" size="0.03" pos="0.06 0.06 0.45" rgba="1 1 1 1"/>
+      
+      <!-- 装棋子的罐子 -->
+      <geom name="chess_jar_black" type="cylinder" size="0.08 0.15" pos="-0.5 0.5 0.5" material="wood_dark"/>
+      <geom name="chess_jar_black_lid" type="cylinder" size="0.09 0.02" pos="-0.5 0.5 0.65" material="wood_dark"/>
+      
+      <geom name="chess_jar_white" type="cylinder" size="0.08 0.15" pos="0.5 -0.5 0.5" material="wood_dark"/>
+      <geom name="chess_jar_white_lid" type="cylinder" size="0.09 0.02" pos="0.5 -0.5 0.65" material="wood_dark"/>
+      
+      <!-- 前后两个小垫子 -->
+      <geom name="chess_cushion_front" type="cylinder" size="0.25 0.08" pos="0 1 0.13" material="fabric_red"/>
+      <geom name="chess_cushion_back" type="cylinder" size="0.25 0.08" pos="0 -1 0.13" material="fabric_blue"/>
+    </body>
+
+    <!-- 白色和蓝色沙发之间的小圆桌 -->
+    <body name="small_round_table_white_blue" pos="-6.5 -3 0.2">
+      <geom name="round_table_top_white_blue" type="cylinder" size="0.35 0.04" pos="0 0 0.45" material="wood_dark"/>
+      <geom name="round_table_leg_white_blue" type="cylinder" size="0.05 0.25" pos="0 0 0.25" material="wood_dark"/>
+    </body>
+
+    <!-- 沙发2（中间） -->
+    <body name="sofa_2" pos="-5 -3 0.2">
+      <!-- 座位 -->
+      <geom name="sofa2_seat" type="box" size="1.2 0.5 0.15" pos="0 0 0.4" material="fabric_blue"/>
+      <!-- 靠背 -->
+      <geom name="sofa2_back" type="box" size="1.2 0.1 0.4" pos="0 -0.4 0.7" material="fabric_blue"/>
+      <!-- 扶手左 -->
+      <geom name="sofa2_arm_left" type="box" size="0.1 0.5 0.3" pos="-1.1 0 0.55" material="wood_dark"/>
+      <!-- 扶手右 -->
+      <geom name="sofa2_arm_right" type="box" size="0.1 0.5 0.3" pos="1.1 0 0.55" material="wood_dark"/>
+      <!-- 靠垫 -->
+      <geom name="sofa2_cushion_1" type="box" size="0.15 0.08 0.15" pos="-0.5 -0.35 0.7" material="fabric_beige"/>
+      <geom name="sofa2_cushion_2" type="box" size="0.15 0.08 0.15" pos="0 -0.35 0.7" material="fabric_red"/>
+      <geom name="sofa2_cushion_3" type="box" size="0.15 0.08 0.15" pos="0.5 -0.35 0.7" material="fabric_gold"/>
+    </body>
+
+    <!-- ========== 蓝色沙发后的大桌子和小凳 ========== -->
+    <!-- 大桌子 -->
+    <body name="large_table_sofa" pos="-5 -1.5 0.0">
+      <geom name="large_table_top" type="box" size="1.5 0.8 0.05" pos="0 0 1.3" material="wood_dark"/>
+      <geom name="large_table_leg1" type="cylinder" size="0.08 0.6375" pos="-1.2 -0.55 0.6375" material="wood_dark"/>
+      <geom name="large_table_leg2" type="cylinder" size="0.08 0.6375" pos="1.2 -0.55 0.6375" material="wood_dark"/>
+      <geom name="large_table_leg3" type="cylinder" size="0.08 0.6375" pos="-1.2 0.55 0.6375" material="wood_dark"/>
+      <geom name="large_table_leg4" type="cylinder" size="0.08 0.6375" pos="1.2 0.55 0.6375" material="wood_dark"/>
+      
+      <!-- 装饰物品 - 花瓶 -->
+      <geom name="vase1" type="cylinder" size="0.08 0.2" pos="-0.5 -0.3 1.5" material="wood_dark"/>
+      <geom name="vase1_top" type="cylinder" size="0.06 0.02" pos="-0.5 -0.3 1.6" material="wood_dark"/>
+      
+      <geom name="vase2" type="cylinder" size="0.06 0.15" pos="0.5 0.3 1.5" material="wood_light"/>
+      <geom name="vase2_top" type="cylinder" size="0.04 0.02" pos="0.5 0.3 1.55" material="wood_light"/>
+      
+      <!-- 装饰物品 - 水杯 -->
+      <geom name="cup1" type="cylinder" size="0.05 0.08" pos="-0.2 -0.2 1.4" material="glass_clear"/>
+      <geom name="cup1_handle" type="cylinder" size="0.02 0.04" pos="-0.2 -0.28 1.4" quat="0 0.707 0 0.707" material="glass_clear"/>
+      <geom name="cup1_water" type="cylinder" size="0.045 0.06" pos="-0.2 -0.2 1.41" rgba="0.8 0.95 1 0.8"/>
+      
+      <geom name="cup2" type="cylinder" size="0.05 0.08" pos="0.2 0.2 1.4" material="glass_clear"/>
+      <geom name="cup2_handle" type="cylinder" size="0.02 0.04" pos="0.2 0.28 1.4" quat="0 0.707 0 0.707" material="glass_clear"/>
+      <geom name="cup2_water" type="cylinder" size="0.045 0.05" pos="0.2 0.2 1.41" rgba="0.8 0.95 1 0.8"/>
+      
+      <geom name="cup3" type="cylinder" size="0.05 0.08" pos="-0.7 0.1 1.4" material="glass_clear"/>
+      <geom name="cup3_handle" type="cylinder" size="0.02 0.04" pos="-0.7 0.18 1.4" quat="0 0.707 0 0.707" material="glass_clear"/>
+      <geom name="cup3_water" type="cylinder" size="0.045 0.07" pos="-0.7 0.1 1.41" rgba="0.8 0.95 1 0.8"/>
+      
+      <geom name="cup4" type="cylinder" size="0.05 0.08" pos="0.7 -0.1 1.4" material="glass_clear"/>
+      <geom name="cup4_handle" type="cylinder" size="0.02 0.04" pos="0.7 -0.18 1.4" quat="0 0.707 0 0.707" material="glass_clear"/>
+      <geom name="cup4_water" type="cylinder" size="0.045 0.04" pos="0.7 -0.1 1.41" rgba="0.8 0.95 1 0.8"/>
+      
+      <!-- 装饰物品 - 花 -->
+      <!-- 花瓶1中的花 -->
+      <geom name="flower1_stem" type="cylinder" size="0.008 0.2" pos="-0.5 -0.3 1.72" rgba="0.3 0.6 0.2 1"/>
+      <geom name="flower1_petal1" type="sphere" size="0.08" pos="-0.55 -0.3 1.88" rgba="1 0 0.2 1"/>
+      <geom name="flower1_petal2" type="sphere" size="0.08" pos="-0.45 -0.3 1.88" rgba="1 0 0.2 1"/>
+      <geom name="flower1_petal3" type="sphere" size="0.08" pos="-0.5 -0.35 1.88" rgba="1 0 0.2 1"/>
+      <geom name="flower1_petal4" type="sphere" size="0.08" pos="-0.5 -0.25 1.88" rgba="1 0 0.2 1"/>
+      <geom name="flower1_center" type="sphere" size="0.04" pos="-0.5 -0.3 1.88" rgba="1 1 0 1"/>
+      
+      <!-- 花瓶2中的花 -->
+      <geom name="flower2_stem" type="cylinder" size="0.008 0.15" pos="0.5 0.3 1.63" rgba="0.3 0.6 0.2 1"/>
+      <geom name="flower2_petal1" type="sphere" size="0.06" pos="0.55 0.3 1.76" rgba="0.8 0.9 0 1"/>
+      <geom name="flower2_petal2" type="sphere" size="0.06" pos="0.45 0.3 1.76" rgba="0.8 0.9 0 1"/>
+      <geom name="flower2_petal3" type="sphere" size="0.06" pos="0.5 0.35 1.76" rgba="0.8 0.9 0 1"/>
+      <geom name="flower2_petal4" type="sphere" size="0.06" pos="0.5 0.25 1.76" rgba="0.8 0.9 0 1"/>
+      <geom name="flower2_center" type="sphere" size="0.03" pos="0.5 0.3 1.76" rgba="1 0.7 0 1"/>
+      
+      <!-- 零散的各色花朵 -->
+      <!-- 红色小花 -->
+      <geom name="scattered_flower1_petal1" type="sphere" size="0.04" pos="-0.82 -0.5 1.37" rgba="1 0 0.2 1"/>
+      <geom name="scattered_flower1_petal2" type="sphere" size="0.04" pos="-0.78 -0.5 1.37" rgba="1 0 0.2 1"/>
+      <geom name="scattered_flower1_petal3" type="sphere" size="0.04" pos="-0.8 -0.52 1.37" rgba="1 0 0.2 1"/>
+      <geom name="scattered_flower1_petal4" type="sphere" size="0.04" pos="-0.8 -0.48 1.37" rgba="1 0 0.2 1"/>
+      <geom name="scattered_flower1_center" type="sphere" size="0.02" pos="-0.8 -0.5 1.37" rgba="1 1 0 1"/>
+      
+      <!-- 粉色小花 -->
+      <geom name="scattered_flower2_petal1" type="sphere" size="0.03" pos="-0.32 0.5 1.40" rgba="1 0.6 0.8 1"/>
+      <geom name="scattered_flower2_petal2" type="sphere" size="0.03" pos="-0.28 0.5 1.40" rgba="1 0.6 0.8 1"/>
+      <geom name="scattered_flower2_petal3" type="sphere" size="0.03" pos="-0.3 0.52 1.40" rgba="1 0.6 0.8 1"/>
+      <geom name="scattered_flower2_petal4" type="sphere" size="0.03" pos="-0.3 0.48 1.40" rgba="1 0.6 0.8 1"/>
+      <geom name="scattered_flower2_center" type="sphere" size="0.015" pos="-0.3 0.5 1.40" rgba="0.8 0.4 0 1"/>
+      
+      <!-- 紫色小花 -->
+      <geom name="scattered_flower3_petal1" type="sphere" size="0.03" pos="0.82 -0.7 1.35" rgba="0.7 0.4 1 1"/>
+      <geom name="scattered_flower3_petal2" type="sphere" size="0.03" pos="0.78 -0.7 1.35" rgba="0.7 0.4 1 1"/>
+      <geom name="scattered_flower3_petal3" type="sphere" size="0.03" pos="0.8 -0.72 1.35" rgba="0.7 0.4 1 1"/>
+      <geom name="scattered_flower3_petal4" type="sphere" size="0.03" pos="0.8 -0.68 1.35" rgba="0.7 0.4 1 1"/>
+      <geom name="scattered_flower3_center" type="sphere" size="0.015" pos="0.8 -0.7 1.35" rgba="0.9 0.8 0.2 1"/>
+      
+      <!-- 黄色小花 -->
+      <geom name="scattered_flower4_petal1" type="sphere" size="0.04" pos="0.42 -0.2 1.42" rgba="0.9 0.8 0 1"/>
+      <geom name="scattered_flower4_petal2" type="sphere" size="0.04" pos="0.38 -0.2 1.42" rgba="0.9 0.8 0 1"/>
+      <geom name="scattered_flower4_petal3" type="sphere" size="0.04" pos="0.4 -0.22 1.42" rgba="0.9 0.8 0 1"/>
+      <geom name="scattered_flower4_petal4" type="sphere" size="0.04" pos="0.4 -0.18 1.42" rgba="0.9 0.8 0 1"/>
+      <geom name="scattered_flower4_center" type="sphere" size="0.02" pos="0.4 -0.2 1.42" rgba="1 0.6 0 1"/>
+      
+      <!-- 蓝色小花 -->
+      <geom name="scattered_flower5_petal1" type="sphere" size="0.03" pos="-0.62 0.2 1.37" rgba="0.4 0.5 1 1"/>
+      <geom name="scattered_flower5_petal2" type="sphere" size="0.03" pos="-0.58 0.2 1.37" rgba="0.4 0.5 1 1"/>
+      <geom name="scattered_flower5_petal3" type="sphere" size="0.03" pos="-0.6 0.22 1.37" rgba="0.4 0.5 1 1"/>
+      <geom name="scattered_flower5_petal4" type="sphere" size="0.03" pos="-0.6 0.18 1.37" rgba="0.4 0.5 1 1"/>
+      <geom name="scattered_flower5_center" type="sphere" size="0.015" pos="-0.6 0.2 1.37" rgba="0.8 0.9 1 1"/>
+      
+      <!-- 橙色小花 -->
+      <geom name="scattered_flower6_petal1" type="sphere" size="0.035" pos="1.02 0.3 1.40" rgba="1 0.6 0.2 1"/>
+      <geom name="scattered_flower6_petal2" type="sphere" size="0.035" pos="0.98 0.3 1.40" rgba="1 0.6 0.2 1"/>
+      <geom name="scattered_flower6_petal3" type="sphere" size="0.035" pos="1.0 0.32 1.40" rgba="1 0.6 0.2 1"/>
+      <geom name="scattered_flower6_petal4" type="sphere" size="0.035" pos="1.0 0.28 1.40" rgba="1 0.6 0.2 1"/>
+      <geom name="scattered_flower6_center" type="sphere" size="0.02" pos="1.0 0.3 1.40" rgba="1 0.8 0.4 1"/>
+    </body>
+    
+    <!-- 红色和蓝色沙发之间的小圆桌 -->
+    <body name="small_round_table_red_blue" pos="-3.5 -3 0.2">
+      <geom name="round_table_top_red_blue" type="cylinder" size="0.35 0.04" pos="0 0 0.45" material="wood_dark"/>
+      <geom name="round_table_leg_red_blue" type="cylinder" size="0.05 0.25" pos="0 0 0.25" material="wood_dark"/>
+    </body>
+
+    <!-- 红色沙发旁边的植物 -->
+    <body name="red_sofa_plant" pos="-0.8 -3 0.2">
+      <geom name="red_plant_pot" type="cylinder" size="0.15 0.25" pos="0 0 0.125" material="pottery"/>
+      
+      
+      <!-- 自然分布的叶子 -->
+      <!-- 第一根茎的叶子 -->
+      <geom name="red_leaf1" type="cylinder" size="0.13 0.21" pos="-0.1 0.07 0.55" quat="0.95 0.1 -0.3 0" rgba="0.22 0.67 0.29 1"/>
+      <geom name="red_leaf2" type="cylinder" size="0.11 0.19" pos="-0.12 0.04 0.75" quat="0.92 0.15 -0.38 0" rgba="0.2 0.7 0.3 1"/>
+      <geom name="red_leaf3" type="cylinder" size="0.12 0.2" pos="-0.08 0.1 0.9" quat="0.88 0.1 -0.47 0" rgba="0.23 0.65 0.28 1"/>
+      
+      <!-- 第二根茎的叶子 -->
+      <geom name="red_leaf4" type="cylinder" size="0.1 0.18" pos="0.1 0.0 0.5" quat="0.35 0.1 0.93 0" rgba="0.21 0.68 0.27 1"/>
+      <geom name="red_leaf5" type="cylinder" size="0.12 0.2" pos="0.12 0.02 0.7" quat="0.4 0.15 0.91 0" rgba="0.24 0.66 0.3 1"/>
+      <geom name="red_leaf6" type="cylinder" size="0.11 0.19" pos="0.08 0.06 0.85" quat="0.32 0 0.95 0" rgba="0.2 0.69 0.26 1"/>
+      
+      <!-- 第三根茎的叶子 -->
+      <geom name="red_leaf7" type="cylinder" size="0.09 0.17" pos="-0.05 -0.08 0.5" quat="0 0.38 0 0.92" rgba="0.22 0.64 0.25 1"/>
+      <geom name="red_leaf8" type="cylinder" size="0.08 0.16" pos="-0.02 -0.1 0.65" quat="0 0.42 0 0.91" rgba="0.25 0.67 0.29 1"/>
+      
+      <!-- 顶部小芽 -->
+      <geom name="red_bud1" type="sphere" size="0.03" pos="-0.03 0.05 1.1" rgba="0.3 0.75 0.3 1"/>
+      <geom name="red_bud2" type="sphere" size="0.025" pos="0.04 0.02 1.0" rgba="0.28 0.7 0.28 1"/>
+    </body>
+
+    <!-- 沙发3（右侧） -->
+    <body name="sofa_3" pos="-2 -3 0.2">
+      <!-- 座位 -->
+      <geom name="sofa3_seat" type="box" size="0.8 0.5 0.15" pos="0 0 0.4" material="fabric_red"/>
+      <!-- 靠背 -->
+      <geom name="sofa3_back" type="box" size="0.8 0.1 0.4" pos="0 -0.4 0.7" material="fabric_red"/>
+      <!-- 扶手左 -->
+      <geom name="sofa3_arm_left" type="box" size="0.1 0.5 0.3" pos="-0.7 0 0.55" material="wood_dark"/>
+      <!-- 扶手右 -->
+      <geom name="sofa3_arm_right" type="box" size="0.1 0.5 0.3" pos="0.7 0 0.55" material="wood_dark"/>
+      <!-- 靠垫 -->
+      <geom name="sofa3_cushion_1" type="box" size="0.15 0.08 0.15" pos="-0.3 -0.35 0.7" material="fabric_blue"/>
+      <geom name="sofa3_cushion_2" type="box" size="0.15 0.08 0.15" pos="0.3 -0.35 0.7" material="fabric_beige"/>
+    </body>
+
+    <!-- ========== 相机视角 ========== -->
+    <camera name="exterior_view" pos="12 12 6" xyaxes="-0.7 0.7 0 -0.35 -0.35 0.87" mode="fixed"/>
+    <camera name="front_door_view" pos="0 10 3" xyaxes="1 0 0 0 0.3 0.95" mode="fixed"/>
+    <camera name="top_view" pos="7.5 0 25" xyaxes="1 0 0 0 1 0" mode="fixed"/>
+    <camera name="side_view" pos="12 0 4" xyaxes="0 1 0 0.3 0 0.95" mode="fixed"/>
+    <camera name="teahouse_inside_view" pos="15 0 2.5" xyaxes="1 0 0 0 0.7 0.7" mode="fixed"/>
+    <camera name="teahouse_front_view" pos="15 10 3" xyaxes="1 0 0 0 0.3 0.95" mode="fixed"/>
+    <camera name="both_buildings_view" pos="7.5 15 8" xyaxes="-1 0 0 0 0.6 0.8" mode="fixed"/>
+
+    <!-- ========== 中国风格毛笔书桌（茶室内部） ========== -->
+    <body name="brush_table" pos="-1.5 2.5 1.0" quat="0.707 0 0 0.707">
+      <!-- 书桌主体 - 更高、更长的长方形 -->
+      <geom name="brush_table_top" type="box" size="1.8 0.6 0.04" pos="0 0 0" material="wood_dark"/>
+      <!-- 桌腿 - 更长以增加高度 -->
+      <geom name="brush_table_leg1" type="cylinder" size="0.06 0.34" pos="-0.8 0.25 -0.36" material="wood_dark"/>
+      <geom name="brush_table_leg2" type="cylinder" size="0.06 0.34" pos="0.8 0.25 -0.36" material="wood_dark"/>
+      <geom name="brush_table_leg3" type="cylinder" size="0.06 0.34" pos="-0.8 -0.25 -0.36" material="wood_dark"/>
+      <geom name="brush_table_leg4" type="cylinder" size="0.06 0.34" pos="0.8 -0.25 -0.36" material="wood_dark"/>
+      
+      <!-- 毛笔（放在桌上） -->
+      <geom name="brush1" type="cylinder" size="0.008 0.2" pos="-0.6 0.15 0.05" quat="0.707 0 0.707 0" rgba="0.2 0.15 0.1 1"/>
+      <geom name="brush1_head" type="sphere" size="0.03" pos="-0.55 0.15 0.15" rgba="0.8 0.7 0.6 1"/>
+      <geom name="brush2" type="cylinder" size="0.008 0.18" pos="-0.45 0.05 0.05" quat="0.707 0 0.707 0" rgba="0.3 0.25 0.15 1"/>
+      <geom name="brush2_head" type="sphere" size="0.025" pos="-0.4 0.05 0.14" rgba="0.7 0.6 0.5 1"/>
+      
+      <!-- 砚台 -->
+      <geom name="inkstone" type="box" size="0.15 0.12 0.03" pos="-0.3 0.1 0.05" rgba="0.3 0.25 0.2 1"/>
+      
+      <!-- 白纸 - 替换宣纸卷 -->
+      <geom name="white_paper" type="box" size="0.5 0.35 0.005" pos="0.4 0 0.05" rgba="0.95 0.95 0.98 0.95"/>
+      
+      <!-- 镇纸 -->
+      <geom name="paperweight" type="cylinder" size="0.04 0.15" pos="0.6 0.1 0.05" quat="0.707 0 0.707 0" rgba="0.15 0.25 0.35 1"/>
+      
+      <!-- 笔架 -->
+      <geom name="brush_rack" type="box" size="0.15 0.02 0.02" pos="-0.5 -0.1 0.08" rgba="0.4 0.3 0.2 1"/>
+      <geom name="brush_rack_leg1" type="cylinder" size="0.01 0.05" pos="-0.52 -0.1 0.03" quat="0.707 0 0.707 0" rgba="0.4 0.3 0.2 1"/>
+      <geom name="brush_rack_leg2" type="cylinder" size="0.01 0.05" pos="-0.48 -0.1 0.03" quat="0.707 0 0.707 0" rgba="0.4 0.3 0.2 1"/>
+    </body>
+    
+    <!-- ========== 咖啡店风格椅子 ========== -->
+    <body name="cafe_style_chair" pos="-0.5 2.9 0.65" quat="0.707 0 0 0.707">
+      <geom name="cafe_chair_seat" type="box" size="0.25 0.25 0.03" pos="0 0 0" material="wood_light"/>
+      <geom name="cafe_chair_back" type="box" size="0.25 0.03 0.35" pos="0 -0.22 0.35" material="wood_light"/>
+      <geom name="cafe_chair_leg1" type="cylinder" size="0.02 0.325" pos="-0.18 -0.18 -0.325" material="metal_dark"/>
+      <geom name="cafe_chair_leg2" type="cylinder" size="0.02 0.325" pos="0.18 -0.18 -0.325" material="metal_dark"/>
+      <geom name="cafe_chair_leg3" type="cylinder" size="0.02 0.325" pos="-0.18 0.18 -0.325" material="metal_dark"/>
+      <geom name="cafe_chair_leg4" type="cylinder" size="0.02 0.325" pos="0.18 0.18 -0.325" material="metal_dark"/>
+      <geom name="cafe_chair_cushion" type="box" size="0.22 0.22 0.04" pos="0 0 0.04" material="fabric_red"/>
+    </body>
+    
+
+
+
+
+
+
+
+
+
+
+
+  </worldbody>
+
+  <!-- ========== 执行器（控制动态元素） ========== -->
+  <actuator>
+  </actuator>
+
+  <!-- ========== 传感器 ========== -->
+  <sensor>
+  </sensor>
+
+  <!-- ========== 关键帧（预设场景状态） ========== -->
+  <keyframe>
+    <!-- 初始状态 -->
+    <key name="initial"/>
+
+    <!-- 茶室门打开 -->
+    <key name="teahouse_door_open"/>
+  </keyframe>
+
+</mujoco>
